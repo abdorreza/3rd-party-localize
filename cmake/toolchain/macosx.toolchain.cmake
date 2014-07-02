@@ -1,0 +1,76 @@
+# To cross compile for MacOSX:
+# build$ cmake .. -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/macosx.toolchain.cmake
+
+SET(CMAKE_SYSTEM_NAME Generic)
+if (NOT "$ENV{MACOSX_SDK_VERSION}" STREQUAL "")
+        SET(CMAKE_SYSTEM_VERSION $ENV{MACOSX_SDK_VERSION})
+endif()
+SET(CMAKE_SYSTEM_PROCESSOR x86_64)
+
+SET(CMAKE_CROSSCOMPILING_TARGET DARWIN)
+SET(IOS OFF)
+SET(UNIX ON)
+SET(APPLE ON)
+SET(LINUX OFF)
+
+execute_process(COMMAND xcode-select -print-path
+    OUTPUT_VARIABLE XCODE_SELECT OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if(EXISTS ${XCODE_SELECT})
+        SET(DEVROOT "${XCODE_SELECT}/Platforms/MacOSX.platform/Developer")
+  set(NEW_XCODE_LOCATION ON)
+        if (NOT EXISTS "${DEVROOT}/SDKs/MacOSX${CMAKE_SYSTEM_VERSION}.sdk")
+		# specified SDK version does not exist, use last one
+		file(GLOB INSTALLED_SDKS ${DEVROOT}/SDKs/*)
+		list(SORT INSTALLED_SDKS)
+		list(REVERSE INSTALLED_SDKS)
+		list(GET INSTALLED_SDKS 0 LATEST_SDK)
+                string(REGEX MATCH "[0-9][0-9]\\.[0-9]" CMAKE_SYSTEM_VERSION ${LATEST_SDK})
+	endif()
+else()
+  set(NEW_XCODE_LOCATION OFF)
+        SET(DEVROOT "/Developer/Platforms/MacOSX.platform/Developer")
+endif()
+
+message(STATUS "MacOSX SDK version:${CMAKE_SYSTEM_VERSION}")
+
+if (${CMAKE_SYSTEM_VERSION} VERSION_EQUAL "10.8" OR ${CMAKE_SYSTEM_VERSION} VERSION_GREATER "10.8")
+  SET(CMAKE_OSX_ARCHITECTURES x86_64)
+  SET(ARCHS "-arch x86_64")
+endif()
+
+if (${CMAKE_SYSTEM_VERSION} VERSION_EQUAL "10.9" OR ${CMAKE_SYSTEM_VERSION} VERSION_GREATER "10.9")
+  SET(CMAKE_OSX_ARCHITECTURES x86_64)
+  SET(ARCHS "-arch x86_64")
+endif()
+
+# we have to use clang - llvm will choke on those __has_feature macros?
+SET (CMAKE_C_COMPILER "${XCODE_SELECT}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang")
+SET (CMAKE_CXX_COMPILER "${XCODE_SELECT}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++")
+
+if ($ENV{MACOSX_DEPLOYMENT_TARGET})
+        message(FATAL_ERROR "llvm will croak with MACOSX_DEPLOYMENT_TARGET environment variable set when building for macosx - unset MACOSX_DEPLOYMENT_TARGET")
+endif()
+
+SET(SDKROOT "${DEVROOT}/SDKs/MacOSX${CMAKE_SYSTEM_VERSION}.sdk")
+SET(CMAKE_OSX_SYSROOT "${SDKROOT}")
+
+# force compiler and linker flags
+SET(CMAKE_C_LINK_FLAGS ${ARCHS})
+SET(CMAKE_CXX_LINK_FLAGS ${ARCHS})
+# SET(CMAKE_C_FLAGS ${ARCHS}) # C_FLAGS wont stick, use ADD_DEFINITIONS instead
+# SET(CMAKE_CXX_FLAGS ${ARCHS})
+ADD_DEFINITIONS(${ARCHS})
+ADD_DEFINITIONS("--sysroot=${SDKROOT}")
+
+# headers
+INCLUDE_DIRECTORIES(SYSTEM "${SDKROOT}/usr/include")
+
+# libraries
+LINK_DIRECTORIES("${SDKROOT}/usr/lib/system")
+LINK_DIRECTORIES("${SDKROOT}/usr/lib")
+
+SET (CMAKE_FIND_ROOT_PATH "${SDKROOT}")
+SET (CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)
+SET (CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+SET (CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
