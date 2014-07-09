@@ -1,0 +1,30 @@
+# - Try to find @PROJECT_NAME@
+# Once done, this will define
+#
+# @PROJECT_NAME@_FOUND - system has @PROJECT_NAME@
+# @PROJECT_NAME@_INCLUDE_DIRS - the @PROJECT_NAME@ include directories
+# @PROJECT_NAME@_LIBRARIES - link these to use @PROJECT_NAME@
+# @PROJECT_NAME@_VERSION - @PROJECT_NAME@ version
+
+# Set the version
+set(@PROJECT_NAME@_VERSION @PACKAGE_VERSION@)
+
+# Get the root install directory
+get_filename_component(_currentDir ${CMAKE_CURRENT_LIST_FILE} PATH)
+get_filename_component(_rootDir ${_currentDir}/@relInstallDir@ ABSOLUTE)
+
+# Set the include directory
+set(@PROJECT_NAME@_INCLUDE_DIR "${_rootDir}/include")
+
+# Set the imported library target
+if(NOT TARGET tbb AND NOT @PROJECT_NAME@_BINARY_DIR)
+  include(${_currentDir}/@PROJECT_NAME@Targets.cmake)
+endif()
+set(@PROJECT_NAME@_LIBRARY tbb)
+
+set(@PROJECT_NAME@_INCLUDE_DIRS ${@PROJECT_NAME@_INCLUDE_DIR})
+set(@PROJECT_NAME@_LIBRARIES ${@PROJECT_NAME@_LIBRARY})
+# TODO(mihelich) Figure out why TBB requires this ARM assembly flag.
+set(@PROJECT_NAME@_DEFINITIONS
+    -Wa
+    -DTBB_PREVIEW_GRAPH_NODES=1)
