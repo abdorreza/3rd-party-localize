@@ -23,7 +23,7 @@ mkdir -p "$PROJECT_BUILD_LOCATION"
 # Build gmock
 cd "$PROJECT_BUILD_LOCATION"
 echo $(pwd)
-cmake "-DCMAKE_TOOLCHAIN_FILE=../../../cmake/toolchain/$PLATFORM_NAME.toolchain.cmake" "../../../$PROJECT_LOCATION"
+cmake "-DCMAKE_TOOLCHAIN_FILE=../../../../localize/cmake/toolchain/$PLATFORM_NAME.toolchain.cmake" "../../../$PROJECT_LOCATION"
 make -j8 VERBOSE=1
 
 # Install artifacts
