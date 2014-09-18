@@ -669,8 +669,9 @@ msgpack_pack_inline_func(_double)(msgpack_pack_user x, double d)
 	union { double f; uint64_t i; } mem;
 	mem.f = d;
 	buf[0] = 0xcb;
-#if defined(__arm__) && !(__ARM_EABI__) // arm-oabi
+#if defined(__arm__) && !(__VFP_FP__) // arm-oabi
     // https://github.com/msgpack/msgpack-perl/pull/1
+    // https://wiki.debian.org/ArmEabiPort
     mem.i = (mem.i & 0xFFFFFFFFUL) << 32UL | (mem.i >> 32UL);
 #endif
     _msgpack_store64(&buf[1], mem.i);
