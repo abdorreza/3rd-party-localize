@@ -265,8 +265,9 @@ msgpack_unpack_func(int, _execute)(msgpack_unpack_struct(_context)* ctx, const c
 			case CS_DOUBLE: {
 					union { uint64_t i; double f; } mem;
 					mem.i = _msgpack_load64(uint64_t,n);
-#if defined(__arm__) && !(__ARM_EABI__) // arm-oabi
-                    // https://github.com/msgpack/msgpack-perl/pull/1
+#if defined(__arm__) && !(__VFP_FP__) // arm-oabi
+                // https://github.com/msgpack/msgpack-perl/pull/1
+                // https://wiki.debian.org/ArmEabiPort
                     mem.i = (mem.i & 0xFFFFFFFFUL) << 32UL | (mem.i >> 32UL);
 #endif
 					push_fixed_value(_double, mem.f); }
