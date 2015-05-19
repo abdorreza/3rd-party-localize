@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$#" -ne 2 ]; then
+if [ "$#" -le 2 ]; then
         echo "Usage $0: lib_location install_location"
 	exit
 fi

@@ -18,7 +18,7 @@ mkdir -p "$TBB_INSTALL_LOCATION/lib"
 # Build TBB
 cd "$TBB_BUILD_LOCATION"
 echo $(pwd)
-cmake "-DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain/macosx.toolchain.cmake" "../../$TBB_LOCATION"
+cmake "-DCMAKE_TOOLCHAIN_FILE=../../../localize/cmake/toolchain/macosx.toolchain.cmake" "-DDISABLE_WERROR=1" "../../$TBB_LOCATION"
 make -j8
 
 # Install TBB

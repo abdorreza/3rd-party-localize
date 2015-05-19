@@ -28,4 +28,4 @@ make -j8 VERBOSE=1
 
 # Install artifacts
 PROJECT_LIB_LOCATION="$(pwd)"
-/bin/sh $REPO_ROOT/build-scripts/install-$PROJECT_NAME.sh $PROJECT_LIB_LOCATION $PROJECT_INSTALL_LOCATION
+/bin/sh $REPO_ROOT/build-scripts/install-$PROJECT_NAME.sh $PROJECT_LIB_LOCATION $PROJECT_INSTALL_LOCATION "../../../$PROJECT_LOCATION" 
