@@ -13,6 +13,8 @@ REPO_ROOT="$(pwd)"
 SRC_DIR=$1
 TEMP_DIR=$2
 
+mkdir -p $TEMP_DIR
+
 cd $SRC_DIR
 /bin/sh bootstrap.sh
 $SRC_DIR/b2 install --prefix=$TEMP_DIR
