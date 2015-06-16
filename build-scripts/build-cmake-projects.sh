@@ -23,9 +23,10 @@ mkdir -p "$PROJECT_BUILD_LOCATION"
 # Build gmock
 cd "$PROJECT_BUILD_LOCATION"
 echo $(pwd)
-cmake -DCMAKE_BUILD_TYPE=Release "-DCMAKE_TOOLCHAIN_FILE=../../../../localize/cmake/toolchain/$PLATFORM_NAME.toolchain.cmake" "../../../$PROJECT_LOCATION"
+cmake -DCMAKE_BUILD_TYPE=Release "-DCMAKE_TOOLCHAIN_FILE=../../../../localize/cmake/toolchain/$PLATFORM_NAME.toolchain.cmake" "-DDISABLE_WERROR=1" "../../../$PROJECT_LOCATION"
 make -j8 VERBOSE=1
 
 # Install artifacts
 PROJECT_LIB_LOCATION="$(pwd)"
-/bin/sh $REPO_ROOT/build-scripts/install-$PROJECT_NAME.sh $PROJECT_LIB_LOCATION $PROJECT_INSTALL_LOCATION
+echo "$REPO_ROOT/build-scripts/install-$PROJECT_NAME.sh $PROJECT_LIB_LOCATION $PROJECT_INSTALL_LOCATION ../../../$PROJECT_LOCATION"
+/bin/sh $REPO_ROOT/build-scripts/install-$PROJECT_NAME.sh $PROJECT_LIB_LOCATION $PROJECT_INSTALL_LOCATION "../../../$PROJECT_LOCATION" 
