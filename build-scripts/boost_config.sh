@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Builds a Boost framework for the Android.
 #
 # To configure the script, define:

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Builds a Boost framework for the Linux.
 #
 # To configure the script, define:
@@ -10,12 +10,13 @@
 
 # Include config and common functions
 SCRIPTPATH="$(dirname $0)/boost_config.sh"
-echo "$SCRIPTPATH"
-source $SCRIPTPATH
+echo "$(pwd)/$SCRIPTPATH"
+. "$(pwd)/$SCRIPTPATH"
+
 
 : ${PREFIXDIR:=`pwd`/linux/prefix}
 : ${BUILDDIR:=`pwd`/linux/build}
-: ${TARGET_TOOLSET}:="$1"
+: ${TARGET_TOOLSET:="$1"}
 
 BOOST_TARBALL=$TARBALLDIR/boost_$BOOST_VERSION2.tar.bz2
 BOOST_SRC=$SRCDIR/boost_${BOOST_VERSION2}
@@ -40,7 +41,7 @@ buildBoostForLinux()
 
     echo Building Boost for Linux
     # Install this one so we can copy the includes for the frameworks...
-    ./b2 -j16 --without-python --build-dir=linux-build --stagedir=linux-build/stage --prefix=$PREFIXDIR toolset=TARGET_TOOLSET target-os=linux threading=multi link=static runtime-link=static variant=release stage
+    ./b2 -j16 --without-python --build-dir=linux-build --stagedir=linux-build/stage --prefix=$PREFIXDIR toolset=$TARGET_TOOLSET target-os=linux threading=multi link=static runtime-link=static variant=release stage
     doneSection
 }
 
@@ -53,7 +54,6 @@ mkdir -p $BUILDDIR
 
 cleanEverythingReadyToStart #may want to comment if repeatedly running during dev
 
-echo "NDK_ROOT:          $NDK_ROOT"
 echo "BOOST_VERSION:     $BOOST_VERSION"
 echo "BOOST_LIBS:        $BOOST_LIBS"
 echo "BOOST_SRC:         $BOOST_SRC"
