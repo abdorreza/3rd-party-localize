@@ -43,10 +43,26 @@ elif [ "$PLATFORM_NAME" == "android" ]; then
 	cp src/boost_1_56_0/android-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
 elif [ "$PLATFORM_NAME" == "linux-gcc" ]; then
 	cd "$TEMP_DIR"
-	sh "../build-scripts/boost_linux.sh"
-	cp src/boost_1_56_0/android-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-	cp src/boost_1_56_0/android-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-	cp src/boost_1_56_0/android-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-	cp src/boost_1_56_0/android-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-	cp src/boost_1_56_0/android-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	sh "../build-scripts/boost_linux.sh gcc"
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+elif [ "$PLATFORM_NAME" == "linux-gcc4.9" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_linux.sh gcc-4.9"
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+elif [ "$PLATFORM_NAME" == "linux-llvm" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_linux.sh llvm"
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/linux-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
 fi
