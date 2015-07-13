@@ -1,28 +1,52 @@
 #!/bin/sh
 
-if [ "$#" -ne 3 ]; then
-        echo "Usage $0: boost_src_dir temp_directory [ios, android, macosx, linux-gcc, linux-llvm]" 
-        echo "Example $0: ~/3rd-party-localize/boost_1_55_0 /tmp/boost-build macosx"
+if [ "$#" -ne 1 ]; then
+        echo "Usage $0: [ios, android, macosx, linux-gcc, linux-gcc4.9, linux-llvm]" 
+        echo "Example $0: macosx"
         exit
 fi
 
 INSTALL_LOCATION="install/boost/"
-PLATFORM_NAME=$3
+PLATFORM_NAME=$1
 
 REPO_ROOT="$(pwd)"
 SRC_DIR=$1
-TEMP_DIR=$2
+TEMP_DIR="$REPO_ROOT/boost_$PLATFORM_NAME""_build"
 
 mkdir -p $TEMP_DIR
 
-cd $SRC_DIR
-/bin/sh bootstrap.sh
-$SRC_DIR/b2 install --prefix=$TEMP_DIR
- 
 mkdir -p $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/
 
-cp $TEMP_DIR/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-cp $TEMP_DIR/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-cp $TEMP_DIR/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-cp $TEMP_DIR/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
-cp $TEMP_DIR/lib/libboost_wserialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+if [ "$PLATFORM_NAME" == "macosx" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_apple.sh"
+	cp $PLATFORM_NAME/build/x86_64/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+elif [ "$PLATFORM_NAME" == "ios" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_apple.sh"
+	cp $PLATFORM_NAME/build/x86_64/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp $PLATFORM_NAME/build/x86_64/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+elif [ "$PLATFORM_NAME" == "android" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_android.sh"
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+elif [ "$PLATFORM_NAME" == "linux-gcc" ]; then
+	cd "$TEMP_DIR"
+	sh "../build-scripts/boost_linux.sh"
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_system.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_serialization.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_program_options.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_filesystem.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+	cp src/boost_1_56_0/android-build/stage/lib/libboost_thread.a $REPO_ROOT/install/boost/lib/$PLATFORM_NAME/ 
+fi
