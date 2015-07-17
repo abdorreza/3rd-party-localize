@@ -1,14 +1,18 @@
-# include <stdlib.h>
-# include <stdio.h>
-# include <string.h>
-# include <ctype.h>
-# include <math.h>
-# include <time.h>
+/*  pbmpak.c  21 June 1999 */
 
-# include "pbmlib.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-# define MAX_LEN 256
-# define MAX(a,b) ( (a)>(b) ? (a) : (b) ) 
+#include "pbmpak.h"
+
+#define FALSE 0
+#define TRUE 1
+
+#define DEBUG FALSE
+#define MAX_LEN 256
+#define MAX(a,b) ( (a)>(b) ? (a) : (b) ) 
 
 char line[MAX_LEN];
 char word[MAX_LEN];
@@ -18,6 +22,7 @@ char word[MAX_LEN];
 void bitchr75 ( char c, int *pattern )
 
 /**********************************************************************/
+
 /*
   Purpose:
 
@@ -46,10 +51,6 @@ void bitchr75 ( char c, int *pattern )
       1 1 1 1 1
       1 0 0 0 1
       1 0 0 0 1
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -585,8 +586,7 @@ void bitchr75 ( char c, int *pattern )
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0 };
 
-  switch ( c )
-  {
+  switch ( c ) {
 
     case ' ':
       pattern_match = pat032;
@@ -767,10 +767,8 @@ void bitchr75 ( char c, int *pattern )
 /*
   Copy data from the pattern to the output.
 */
-  for ( i = 0; i < 7; i++ )
-  {
-    for ( j = 0; j < 5; j++ )
-    {
+  for ( i = 0; i < 7; i++ ) {
+    for ( j = 0; j < 5; j++ ) {
       *pattern = *pattern_match;
       pattern = pattern + 1;
       pattern_match = pattern_match + 1;
@@ -779,11 +777,13 @@ void bitchr75 ( char c, int *pattern )
 
   return;
 }
-/******************************************************************************/
-
-int pbm_check_data ( int xsize, int ysize, int *barray )
 
 /******************************************************************************/
+
+int pbm_check_data ( int xsize, int ysize, int *barray ) {
+
+/******************************************************************************/
+
 /*
   Purpose:
 
@@ -801,10 +801,6 @@ int pbm_check_data ( int xsize, int ysize, int *barray )
     0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
     0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
     0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -824,27 +820,23 @@ int pbm_check_data ( int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the data was legal.
 */
-{
   int  i;
   int *indexb;
   int  j;
 
-  if ( xsize <= 0 )
-  {
+  if ( xsize <= 0 ) {
     printf ( "\n" );
     printf ( "PBM_CHECK_DATA: 0 >= XSIZE = %d.\n", xsize );
     return 1;
   }
 
-  if ( ysize <= 0 )
-  {
+  if ( ysize <= 0 ) {
     printf ( "\n" );
     printf ( "PBM_CHECK_DATA: 0 >= YSIZE = %d.\n", ysize );
     return 1;
   }
 
-  if ( barray == NULL )
-  {
+  if ( barray == NULL ) {
     printf ( "\n" );
     printf ( "PBM_CHECK_DATA: Null pointer to data.\n" );
     return 1;
@@ -852,12 +844,10 @@ int pbm_check_data ( int xsize, int ysize, int *barray )
 
   indexb = barray;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      if ( *indexb != 0 && *indexb != 1 )
-      {
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
+      if ( *indexb != 0 && *indexb != 1 ) {
         printf ( "\n" );
         printf ( "PBM_CHECK_DATA: b(%d,%d) = %d.\n", i, j, *indexb );
         return 1;
@@ -871,100 +861,15 @@ int pbm_check_data ( int xsize, int ysize, int *barray )
 }
 /******************************************************************************/
 
-int pbm_example ( int xsize, int ysize, int *barray )
+int pbma_read ( char *filein_name, int *xsize, int *ysize, int **barray ) {
 
 /******************************************************************************/
-/*
-  Purpose:
 
-    PBM_EXAMPLE sets up some PBM data.
-
-  Discussion:
-
-    The data represents an ellipse.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
-
-    16 December 2002
-
-  Author:
-
-    John Burkardt
-
-  Parameters:
-
-    Input, int XSIZE, YSIZE, the number of rows and columns of data.
-    Values of 200 would be reasonable.
-
-    Output, int *BARRAY, the array of XSIZE by YSIZE data values.
-
-    Output, int PBM_EXAMPLE, is
-    0, if no error occurred,
-    1, if an error occurred.
-*/
-{
-  int i;
-  int *indexb;
-  int j;
-  float r;
-  float test;
-  float x;
-  float xc;
-  float y;
-  float yc;
- 
-  indexb = barray;
-  if ( xsize < ysize )
-  {
-    r = ( float ) xsize / 3.0;
-  }
-  else
-  {
-    r = ( float ) ysize / 3.0;
-  }
-  xc = ( xsize ) / 2.0;
-  yc = ( ysize ) / 2.0;
-
-  for ( i = 0; i < ysize; i++ )
-  {
-    y = ( float ) i;
-    for ( j = 0; j < xsize; j++ )
-    {
-      x = ( float ) j;
-      test = r - sqrt ( ( x - xc ) * ( x - xc ) 
-               + 0.75 * ( y - yc ) * ( y - yc ) );
-      if ( fabs ( test ) <= 3.0 )
-      {
-        *indexb = 1;
-      }
-      else
-      {
-        *indexb = 0;
-      }
-      indexb = indexb + 1;
-    }
-  }
-
-  return 0;
-}
-/******************************************************************************/
-
-int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
-
-/******************************************************************************/
 /*
   Purpose:
 
     PBMA_READ reads the header and data from an ASCII portable bit map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     27 September 1998
@@ -975,7 +880,7 @@ int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable bit map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -986,27 +891,24 @@ int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
     1, if an error was detected, or
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "r" );
+  filein = fopen ( filein_name, "r" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PBMA_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = pbma_read_header ( file_pointer, xsize, ysize );
+  result = pbma_read_header ( filein, xsize, ysize );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_READ: Fatal error!\n" );
     printf ( "  PBMA_READ_HEADER failed.\n" );
@@ -1019,8 +921,7 @@ int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
 
   *barray = ( int * ) malloc ( numbytes );
 
-  if ( *barray == NULL )
-  {
+  if ( *barray == NULL ) {
     printf ( "\n" );
     printf ( "PBMA_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -1030,10 +931,9 @@ int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
 /*
   Read the data.
 */
-  result = pbma_read_data ( file_pointer, *xsize, *ysize, *barray );
+  result = pbma_read_data ( filein, *xsize, *ysize, *barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_READ: Fatal error!\n" );
     printf ( "  PBMA_READ_DATA failed.\n" );
@@ -1042,15 +942,16 @@ int pbma_read ( char *file_name, int *xsize, int *ysize, int **barray )
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
+int pbma_read_data ( FILE *filein, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -1069,10 +970,6 @@ int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
     0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
     0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
     27 September 1998
@@ -1083,7 +980,7 @@ int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -1094,7 +991,6 @@ int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the data was read.
 */
-{
   int   count;
   int   i;
   int  *indexb;
@@ -1106,44 +1002,40 @@ int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
   int   width;
 
   indexb = barray;
-  need_line = 1;
+  need_line = TRUE;
   next = NULL;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      need_value = 1;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
 
-      while ( need_value == 1 )
-      {
-        if ( need_line == 1 )
-        {
-          next = fgets ( line, MAX_LEN, file_pointer );
+      need_value = TRUE;
 
-          if ( next == NULL )
-          {
+      while ( need_value == TRUE ) {
+
+        if ( need_line == TRUE ) {
+
+          next = fgets ( line, MAX_LEN, filein );
+
+          if ( next == NULL ) {
             printf ( "\n" );
             printf ( "PBMA_READ_DATA: Fatal error.\n" );
             printf ( "  End of input.\n" );
             return 1;
           }
-          need_line = 0;
+          need_line = FALSE;
         }
 
         count = sscanf ( next, "%s%n", word, &width );
 
-        if ( count == EOF )
-        {
-          need_line = 1;
+        if ( count == EOF ) {
+          need_line = TRUE;
         }
-        else
-        {
+        else {
           next = next + width;
           count = sscanf ( word, "%d", &ival );
           *indexb = ival;
           indexb = indexb + 1;
-          need_value = 0;
+          need_value = FALSE;
         }
 
       }
@@ -1154,9 +1046,10 @@ int pbma_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 }
 /******************************************************************************/
 
-int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
+int pbma_read_header ( FILE *filein, int *xsize, int *ysize ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -1175,10 +1068,6 @@ int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
     0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
     0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
     27 September 1998
@@ -1189,7 +1078,7 @@ int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable bit map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -1198,31 +1087,26 @@ int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
     1, if an error was detected, or
     0, if the header was read.
 */
-{
-  int count;
+  int   count;
   char *next;
   int   step;
   int   width;
 
   step = 0;
 
-  while ( ( next = fgets ( line, MAX_LEN, file_pointer ) ) != NULL )
-  {
-    if ( line[0] == '#' )
-    {
+  while ( ( next = fgets ( line, MAX_LEN, filein ) ) != NULL ) {
+
+    if ( line[0] == '#' ) {
       continue;
     }
 
-    if ( step == 0 )
-    {
+    if ( step == 0 ) {
       count = sscanf ( next, "%s%n", word, &width );
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       next = next + width;
-      if ( strcmp ( word, "P1" ) != 0 && strcmp ( word, "p1" ) != 0 )
-      {
+      if ( strcmp ( word, "P1" ) != 0 && strcmp ( word, "p1" ) != 0 ) {
         printf ( "\n" );
         printf ( "PBMA_READ_HEADER: Fatal error.\n" );
         printf ( "  Bad magic number = %s.\n", word );
@@ -1231,23 +1115,21 @@ int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
       step = 1;
     }
 
-    if ( step == 1 )
-    {
+    if ( step == 1 ) {
+
       count = sscanf ( next, "%d%n", xsize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       step = 2;
     }
 
-    if ( step == 2 )
-    {
+    if ( step == 2 ) {
+
       count = sscanf ( next, "%d%n", ysize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       return 0;
@@ -1263,17 +1145,14 @@ int pbma_read_header ( FILE *file_pointer, int *xsize, int *ysize )
 }
 /******************************************************************************/
 
-int pbma_read_test ( char *file_name )
+int pbma_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMA_READ_TEST tests the ASCII portable bit map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -1285,14 +1164,14 @@ int pbma_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable bit map data.
 
     Output, int PBMA_READ_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *barray;
   int  result;
   int  xsize;
@@ -1302,15 +1181,13 @@ int pbma_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = pbma_read ( file_name, &xsize, &ysize, &barray );
+  result = pbma_read ( filein_name, &xsize, &ysize, &barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_READ_TEST: Fatal error!\n" );
     printf ( "  PBMA_READ failed.\n" );
-    if ( barray != NULL )
-    {
+    if ( barray != NULL ) {
       free ( barray );
     }
     return 1;
@@ -1320,13 +1197,11 @@ int pbma_read_test ( char *file_name )
 */
   result = pbm_check_data ( xsize, ysize, barray );
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PBM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -1339,31 +1214,15 @@ int pbma_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pbma_write ( char *file_name, int xsize, int ysize, int *barray )
+int pbma_write ( char *fileout_name, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMA_WRITE writes the header and data for an ASCII portable bit map file.
  
-  Example:
-
-    P1
-    # feep.pbma created by PBMPAK(PBMA_WRITE).
-    24 7
-    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-    0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0
-    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0
-    0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 1 0
-    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
-    0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
-    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     27 September 1998
@@ -1374,7 +1233,7 @@ int pbma_write ( char *file_name, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -1385,26 +1244,23 @@ int pbma_write ( char *file_name, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the file was written.
 */
-{
-  FILE *file_pointer;
+  FILE *fileout;
   int   result;
 
-  file_pointer = fopen ( file_name, "w" );
+  fileout = fopen ( fileout_name, "w" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( fileout == NULL ) {
     printf ( "\n" );
     printf ( "PBMA_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
     return 1;
   }
 /*
   Write the header.
 */
-  result = pbma_write_header ( file_pointer, file_name, xsize, ysize );
+  result = pbma_write_header ( fileout, fileout_name, xsize, ysize );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_WRITE: Fatal error!\n" );
     printf ( "  PBMA_WRITE_HEADER failed.\n" );
@@ -1413,10 +1269,9 @@ int pbma_write ( char *file_name, int xsize, int ysize, int *barray )
 /*
   Write the data.
 */
-  result = pbma_write_data ( file_pointer, xsize, ysize, barray );
+  result = pbma_write_data ( fileout, xsize, ysize, barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_WRITE: Fatal error!\n" );
     printf ( "  PBMA_WRITE_DATA failed.\n" );
@@ -1425,23 +1280,33 @@ int pbma_write ( char *file_name, int xsize, int ysize, int *barray )
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( fileout );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbma_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
+int pbma_write_data ( FILE *fileout, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMA_WRITE_DATA writes the data for an ASCII portable bit map file.
 
-  Licensing:
+  Example:
 
-    This code is distributed under the GNU LGPL license. 
+    P1
+    # feep.pbm
+    24 7
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0
+    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0
+    0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 1 0
+    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+    0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
   Modified:
 
@@ -1453,7 +1318,7 @@ int pbma_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -1464,7 +1329,6 @@ int pbma_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the data was written.
 */
-{
   int  i;
   int *indexb;
   int  j;
@@ -1472,22 +1336,19 @@ int pbma_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 
   indexb = barray;
   numval = 0;
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      fprintf ( file_pointer, "%d", *indexb );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
+      fprintf ( fileout, "%d", *indexb );
 
       numval = numval + 1;
       indexb = indexb + 1;
 
-      if ( numval%35 == 0 || numval == xsize * ysize )
-      {
-        fprintf ( file_pointer, "\n" );
+      if ( numval%35 == 0 || numval == xsize * ysize ) {
+        fprintf ( fileout, "\n" );
       }
-      else
-      {
-        fprintf ( file_pointer, " " );
+      else {
+        fprintf ( fileout, " " );
       }
 
     }
@@ -1496,22 +1357,32 @@ int pbma_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 }
 /******************************************************************************/
 
-int pbma_write_header ( FILE *file_pointer, char *file_name, int xsize, 
-  int ysize )
+int pbma_write_header ( FILE *fileout, char *fileout_name, int xsize, 
+  int ysize ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMA_WRITE_HEADER writes the header of an ASCII portable bit map file.
 
-  Licensing:
+  Example:
 
-    This code is distributed under the GNU LGPL license. 
+    P1
+    # feep.pbm
+    24 7
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0
+    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0
+    0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 1 0
+    0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+    0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
   Modified:
 
-    13 December 2002
+    27 September 1998
 
   Author:
 
@@ -1519,10 +1390,10 @@ int pbma_write_header ( FILE *file_pointer, char *file_name, int xsize,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable bit map data.
 
-    Input, char *FILE_NAME, the name of the output file.
+    Input, char *FILEOUT_NAME, the name of the output file.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
 
@@ -1530,30 +1401,27 @@ int pbma_write_header ( FILE *file_pointer, char *file_name, int xsize,
     1, if an error was detected, or
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P1\n" );
-  fprintf ( file_pointer, "# %s created by PBMPAK(PBMA_WRITE).\n", file_name );
-  fprintf ( file_pointer, "%d %d\n", xsize, ysize );
+
+  fprintf ( fileout, "P1\n" );
+  fprintf ( fileout, "# %s\n", fileout_name );
+  fprintf ( fileout, "%d %d\n", xsize, ysize );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbma_write_test ( char *file_name )
+int pbma_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMA_WRITE_TEST tests the ASCII portable bit map write routines.
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
-    16 December 2002
+    27 September 1998
 
   Author:
 
@@ -1561,50 +1429,70 @@ int pbma_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
     portable bit map data.
 
     Output, int PBMA_WRITE_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *barray;
+  int  i;
+  int *indexb;
+  int  j;
+  int  k1;
+  int  k2;
+  int  numbytes;
   int  result;
-  int xsize = 250;
-  int ysize = 150;
+  int  xsize;
+  int  ysize;
 /*
   Set the data.
-*/  
-  barray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+*/
+  xsize = 250;
+  ysize = 150;
 
-  if ( barray == NULL )
-  {
+  barray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
+  barray = ( int * ) malloc ( numbytes );
+
+  if ( barray == NULL ) {
     printf ( "\n" );
     printf ( "PBMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  result = pbm_example ( xsize, ysize, barray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PBMA_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PBM_EXAMPLE failed.\n" );
-    return 1;
+  indexb = barray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      k1 = i - xsize / 2;
+      if ( k1 < 0 ) {
+        k1 = - k1;
+      }
+      k2 = j - ysize / 2;
+      if ( k2 < 0 ) {
+        k2 = - k2;
+      }
+      if ( k1 > k2 ) {
+        *indexb = k1%2;
+      }
+      else {
+        *indexb = k2%2;
+      }
+      indexb = indexb + 1;
+    }
   }
 
-  result = pbma_write ( file_name, xsize, ysize, barray );
+  result = pbma_write ( fileout_name, xsize, ysize, barray );
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  PBMA_WRITE failed.\n" );
@@ -1615,18 +1503,15 @@ int pbma_write_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
+int pbmb_read ( char *filein_name, int *xsize, int *ysize, int **barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_READ reads the header and data from a binary portable bit map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     04 October 1998
@@ -1637,7 +1522,7 @@ int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable bit map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -1648,27 +1533,24 @@ int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
     1, if an error was detected, or
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "rb" );
+  filein = fopen ( filein_name, "rb" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PBMB_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = pbmb_read_header ( file_pointer, xsize, ysize );
+  result = pbmb_read_header ( filein, xsize, ysize );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_READ: Fatal error!\n" );
     printf ( "  PBMB_READ_HEADER failed.\n" );
@@ -1681,8 +1563,7 @@ int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
 
   *barray = ( int * ) malloc ( numbytes );
 
-  if ( *barray == NULL )
-  {
+  if ( *barray == NULL ) {
     printf ( "\n" );
     printf ( "PBMB_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -1692,10 +1573,9 @@ int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
 /*
   Read the data.
 */
-  result = pbmb_read_data ( file_pointer, *xsize, *ysize, *barray );
+  result = pbmb_read_data ( filein, *xsize, *ysize, *barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_READ: Fatal error!\n" );
     printf ( "  PBMB_READ_DATA failed.\n" );
@@ -1704,23 +1584,20 @@ int pbmb_read ( char *file_name, int *xsize, int *ysize, int **barray )
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
+int pbmb_read_data ( FILE *filein, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_READ_DATA reads the data in a binary portable bit map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -1732,7 +1609,7 @@ int pbmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -1743,7 +1620,6 @@ int pbmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the data was read.
 */
-{
   int           bit;
   int           c;
   unsigned char c2;
@@ -1756,16 +1632,14 @@ int pbmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
   indexb = barray;
   numbyte = 0;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      if ( i%8 == 0 )
-      {
-        c = fgetc ( file_pointer );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
 
-        if ( c == EOF )
-        {
+      if ( i%8 == 0 ) {
+
+        c = fgetc ( filein );
+
+        if ( c == EOF ) {
           printf ( "\n" );
           printf ( "PBMB_READ_DATA: Failed reading data byte %d.\n", numbyte );
           return 1;
@@ -1785,17 +1659,14 @@ int pbmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 }
 /******************************************************************************/
 
-int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
+int pbmb_read_header ( FILE *filein, int *xsize, int *ysize ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_READ_HEADER reads the header of a binary portable bit map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -1807,7 +1678,7 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable bit map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -1816,7 +1687,6 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
     1, if an error was detected, or
     0, if the header was read.
 */
-{
   int   c_val;
   int   count;
   int   flag;
@@ -1827,13 +1697,11 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
   state = 0;
   nchar = 0;
 
-  for ( ;; )
-  {
+  for ( ;; ) {
 
-    c_val = fgetc ( file_pointer );
+    c_val = fgetc ( filein );
 
-    if ( c_val == EOF )
-    {
+    if ( c_val == EOF ) {
       return 1;
     }
 /*
@@ -1841,32 +1709,26 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
 */
     flag = isspace ( c_val );
 
-    if ( !flag )
-    {
+    if ( !flag ) {
       string[nchar] = c_val;
       nchar = nchar + 1;
     }
 /*
   See if we have finished an old item, or begun a new one.
 */
-    if ( state == 0 )
-    {
-      if ( !flag )
-      {
+    if ( state == 0 ) {
+      if ( !flag ) {
         state = 1;
       }
       else {
         return 1;
       }
     }
-    else if ( state == 1 )
-    {
-      if ( flag )
-      {
+    else if ( state == 1 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
-        if ( strcmp ( string, "P4" ) != 0 && strcmp ( string, "p4" ) != 0 )
-        {
+        if ( strcmp ( string, "P4" ) != 0 && strcmp ( string, "p4" ) != 0 ) {
           printf ( "\n" );
           printf ( "PBMB_READ_HEADER: Fatal error.\n" );
           printf ( "  Bad magic number = %s.\n", string );
@@ -1876,44 +1738,34 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
         state = 2;
       }
     }
-    else if ( state == 2 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 2 ) {
+      if ( !flag ) {
         state = 3;
       }
     }
-    else if ( state == 3 )
-    {
-      if ( flag )
-      {
+    else if ( state == 3 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", xsize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
         state = 4;
       }
     }
-    else if ( state == 4 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 4 ) {
+      if ( !flag ) {
         state = 5;
       }
     }
-    else if ( state == 5 )
-    {
-      if ( flag )
-      {
+    else if ( state == 5 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", ysize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
@@ -1924,17 +1776,14 @@ int pbmb_read_header ( FILE *file_pointer, int *xsize, int *ysize )
 }
 /******************************************************************************/
 
-int pbmb_read_test ( char *file_name )
+int pbmb_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_READ_TEST tests the binary portable bit map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -1946,14 +1795,14 @@ int pbmb_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable bit map data.
 
     Output, int PBMB_READ_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *barray;
   int  result;
   int  xsize;
@@ -1963,15 +1812,13 @@ int pbmb_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = pbmb_read ( file_name, &xsize, &ysize, &barray );
+  result = pbmb_read ( filein_name, &xsize, &ysize, &barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_READ_TEST: Fatal error!\n" );
     printf ( "  PBMB_READ failed.\n" );
-    if ( barray != NULL )
-    {
+    if ( barray != NULL ) {
       free ( barray );
     }
     return 1;
@@ -1981,13 +1828,11 @@ int pbmb_read_test ( char *file_name )
 */
   result = pbm_check_data ( xsize, ysize, barray );
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PBM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -2000,18 +1845,15 @@ int pbmb_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pbmb_write ( char *file_name, int xsize, int ysize, int *barray )
+int pbmb_write ( char *fileout_name, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_WRITE writes the header and data for a binary portable bit map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     04 October 1998
@@ -2022,7 +1864,7 @@ int pbmb_write ( char *file_name, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -2033,26 +1875,23 @@ int pbmb_write ( char *file_name, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the file was written.
 */
-{
-  FILE *file_pointer;
+  FILE *fileout;
   int   result;
 
-  file_pointer = fopen ( file_name, "wb" );
+  fileout = fopen ( fileout_name, "wb" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( fileout == NULL ) {
     printf ( "\n" );
     printf ( "PBMB_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
     return 1;
   }
 /*
   Write the header.
 */
-  result = pbmb_write_header ( file_pointer, xsize, ysize );
+  result = pbmb_write_header ( fileout, xsize, ysize );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_WRITE: Fatal error!\n" );
     printf ( "  PBMB_WRITE_HEADER failed.\n" );
@@ -2061,10 +1900,9 @@ int pbmb_write ( char *file_name, int xsize, int ysize, int *barray )
 /*
   Write the data.
 */
-  result = pbmb_write_data ( file_pointer, xsize, ysize, barray );
+  result = pbmb_write_data ( fileout, xsize, ysize, barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_WRITE: Fatal error!\n" );
     printf ( "  PBMB_WRITE_DATA failed.\n" );
@@ -2073,23 +1911,20 @@ int pbmb_write ( char *file_name, int xsize, int ysize, int *barray )
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( fileout );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
+int pbmb_write_data ( FILE *fileout, int xsize, int ysize, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_WRITE_DATA writes the data for a binary portable bit map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -2101,7 +1936,7 @@ int pbmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -2112,7 +1947,6 @@ int pbmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
     1, if an error was detected, or
     0, if the data was written.
 */
-{
   int           bit;
   unsigned char c;
   int           i;
@@ -2123,19 +1957,17 @@ int pbmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
   indexb = barray;
   c = 0;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
       k = 7 - i%8;
       bit = (*indexb)%2;
       c = c | ( bit << k );
 
       indexb = indexb + 1;
 
-      if ( (i+1)%8 == 0 || i == ( xsize - 1 ) )
-      {
-        fputc ( c, file_pointer );
+      if ( (i+1)%8 == 0 || i == ( xsize - 1 ) ) {
+        fputc ( c, fileout );
         c = 0;
       }
 
@@ -2145,17 +1977,14 @@ int pbmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *barray )
 }
 /******************************************************************************/
 
-int pbmb_write_header ( FILE *file_pointer, int xsize, int ysize )
+int pbmb_write_header ( FILE *fileout, int xsize, int ysize ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_WRITE_HEADER writes the header of a binary portable bit map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -2167,7 +1996,7 @@ int pbmb_write_header ( FILE *file_pointer, int xsize, int ysize )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable bit map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -2176,28 +2005,25 @@ int pbmb_write_header ( FILE *file_pointer, int xsize, int ysize )
     1, if an error was detected, or
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P4 %d %d ", xsize, ysize );
+
+  fprintf ( fileout, "P4 %d %d ", xsize, ysize );
 
   return 0;
 }
 /******************************************************************************/
 
-int pbmb_write_test ( char *file_name )
+int pbmb_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PBMB_WRITE_TEST tests the binary portable bit map write routines.
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
-    16 December 2002
+    04 October 1998
 
   Author:
 
@@ -2205,15 +2031,21 @@ int pbmb_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable bit map data.
 
     Output, int PBMB_WRITE_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *barray;
+  int  i;
+  int *indexb;
+  int  j;
+  int  k1;
+  int  k2;
+  int  numbytes;
   int  result;
   int  xsize;
   int  ysize;
@@ -2222,36 +2054,47 @@ int pbmb_write_test ( char *file_name )
 */
   xsize = 250;
   ysize = 150;
- 
-  barray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
 
-  if ( barray == NULL )
-  {
+  barray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
+  barray = ( int * ) malloc ( numbytes );
+
+  if ( barray == NULL ) {
     printf ( "\n" );
     printf ( "PBMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  result = pbm_example ( xsize, ysize, barray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PBMB_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PBM_EXAMPLE failed.\n" );
-    return 1;
+  indexb = barray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      k1 = i - xsize / 2;
+      if ( k1 < 0 ) {
+        k1 = - k1;
+      }
+      k2 = j - ysize / 2;
+      if ( k2 < 0 ) {
+        k2 = - k2;
+      }
+      if ( k1 > k2 ) {
+        *indexb = k1%2;
+      }
+      else {
+        *indexb = k2%2;
+      }
+      indexb = indexb + 1;
+    }
   }
 
-  result = pbmb_write ( file_name, xsize, ysize, barray );
+  result = pbmb_write ( fileout_name, xsize, ysize, barray );
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PBMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  PBMB_WRITE failed.\n" );
@@ -2262,9 +2105,10 @@ int pbmb_write_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray )
+int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -2283,11 +2127,7 @@ int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray )
     0  3  0  0  0  0  0  7  0  0  0  0  0 11  0  0  0  0  0 15  0  0  0  0
     0  3  0  0  0  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15  0  0  0  0
     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
+    
   Modified:
 
     03 October 1998
@@ -2308,26 +2148,22 @@ int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray )
     1, if an error was detected, or
     0, if the data was legal.
 */
-{
   int  i;
   int *indexg;
   int  j;
 
-  if ( xsize <= 0 )
-  {
+  if ( xsize <= 0 ) {
     printf ( "\n" );
     printf ( "PGM_CHECK_DATA: 0 >= XSIZE = %d.\n", xsize );
     return 1;
   }
-  if ( ysize <= 0 )
-  {
+  if ( ysize <= 0 ) {
     printf ( "\n" );
     printf ( "PGM_CHECK_DATA: 0 >= YSIZE = %d.\n", ysize );
     return 1;
   }
 
-  if ( garray == NULL )
-  {
+  if ( garray == NULL ) {
     printf ( "\n" );
     printf ( "PGM_CHECK_DATA: Null pointer to data.\n" );
     return 1;
@@ -2335,19 +2171,16 @@ int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray )
 
   indexg = garray;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      if ( *indexg < 0  )
-      {
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
+      if ( *indexg < 0  ) {
         printf ( "\n" );
         printf ( "PGM_CHECK_DATA: G(%d,%d) = %d < 0.\n", 
           i, j, *indexg );
         return 1;
       }
-      else if ( *indexg > maxgray )
-      {
+      else if ( *indexg > maxgray ) {
         printf ( "\n" );
         printf ( "PGM_CHECK_DATA: G(%d,%d) = %d > %d.\n", 
           i, j, *indexg, maxgray );
@@ -2362,80 +2195,16 @@ int pgm_check_data ( int xsize, int ysize, int maxgray, int *garray )
 }
 /******************************************************************************/
 
-int pgm_example ( int xsize, int ysize, int *garray )
+int pgma_read ( char *filein_name, int *xsize, int *ysize, int *maxgray,
+  int **garray ) {
 
 /******************************************************************************/
-/*
-  Purpose:
 
-    PGM_EXAMPLE sets up some PGM data.
-
-  Discussion:
-
-    The data is based on three periods of a sine curve.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
-
-    16 December 2002
-
-  Author:
-
-    John Burkardt
-
-  Parameters:
-
-    Input, int XSIZE, YSIZE, the number of rows and columns of data.
-    Values of 200 would be reasonable.
-
-    Output, int *GARRAY, the array of XSIZE by YSIZE data values.
-
-    Output, int PGM_EXAMPLE, is
-    0, if no error occurred,
-    1, if an error occurred.
-*/
-{
-  int i;
-  int *indexg;
-  int j;
-  int periods = 3;
-  float pi = 3.14159265;
-  float x;
-  float y;
-
-  indexg = garray;
-
-  for ( i = 0; i < ysize; i++ )
-  {
-    y = 2.0 * ( float ) ( i ) / ( float ) ( ysize - 1 ) - 1.0;
-    for ( j = 0; j < xsize; j++ )
-    {
-      x = 2.0 * pi * ( float ) ( periods * ( j ) ) / ( float ) ( xsize - 1 );
-      *indexg = ( int ) ( 20.0 * ( sin ( x ) - y + 2.0 ) );
-      indexg = indexg + 1;
-    }
-  }
-
-  return 0;
-}
-/******************************************************************************/
-
-int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
-  int **garray )
-
-/******************************************************************************/
 /*
   Purpose:
 
     PGMA_READ reads the header and data from an ASCII portable gray map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     29 September 1998
@@ -2446,7 +2215,7 @@ int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable gray map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -2459,27 +2228,24 @@ int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
     1, if an error was detected, or
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "r" );
+  filein = fopen ( filein_name, "r" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PGMA_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = pgma_read_header ( file_pointer, xsize, ysize, maxgray );
+  result = pgma_read_header ( filein, xsize, ysize, maxgray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMA_READ: Fatal error!\n" );
     printf ( "  PGMA_READ_HEADER failed.\n" );
@@ -2492,8 +2258,7 @@ int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 
   *garray = ( int * ) malloc ( numbytes );
 
-  if ( *garray == NULL )
-  {
+  if ( *garray == NULL ) {
     printf ( "\n" );
     printf ( "PGMA_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -2503,10 +2268,9 @@ int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 /*
   Read the data.
 */
-  result = pgma_read_data ( file_pointer, *xsize, *ysize, *garray );
+  result = pgma_read_data ( filein, *xsize, *ysize, *garray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMA_READ: Fatal error!\n" );
     printf ( "  PGMA_READ_DATA failed.\n" );
@@ -2515,15 +2279,16 @@ int pgma_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
+int pgma_read_data ( FILE *filein, int xsize, int ysize, int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -2542,11 +2307,7 @@ int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
     0  3  0  0  0  0  0  7  0  0  0  0  0 11  0  0  0  0  0 15  0  0  0  0
     0  3  0  0  0  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15  0  0  0  0
     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
+    
   Modified:
 
     29 September 1998
@@ -2557,7 +2318,7 @@ int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -2568,7 +2329,6 @@ int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
     1, if an error was detected, or
     0, if the data was read.
 */
-{
   int   count;
   int   i;
   int  *indexg;
@@ -2580,44 +2340,40 @@ int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
   int   width;
 
   indexg = garray;
-  need_line = 1;
+  need_line = TRUE;
   next = NULL;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      need_value = 1;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
 
-      while ( need_value == 1 )
-      {
-        if ( need_line == 1 )
-        {
-          next = fgets ( line, MAX_LEN, file_pointer );
+      need_value = TRUE;
 
-          if ( next == NULL )
-          {
+      while ( need_value == TRUE ) {
+
+        if ( need_line == TRUE ) {
+
+          next = fgets ( line, MAX_LEN, filein );
+
+          if ( next == NULL ) {
             printf ( "\n" );
             printf ( "PGMA_READ_DATA: Fatal error.\n" );
             printf ( "  End of input.\n" );
             return 1;
           }
-          need_line = 0;
+          need_line = FALSE;
         }
 
         count = sscanf ( next, "%s%n", word, &width );
 
-        if ( count == EOF )
-        {
-          need_line = 1;
+        if ( count == EOF ) {
+          need_line = TRUE;
         }
-        else
-        {
+        else {
           next = next + width;
           count = sscanf ( word, "%d", &ival );
           *indexg = ival;
           indexg = indexg + 1;
-          need_value = 0;
+          need_value = FALSE;
         }
 
       }
@@ -2628,9 +2384,10 @@ int pgma_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 }
 /******************************************************************************/
 
-int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray )
+int pgma_read_header ( FILE *filein, int *xsize, int *ysize, int *maxgray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -2650,10 +2407,6 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
     0  3  0  0  0  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15  0  0  0  0
     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
     
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
     29 September 1998
@@ -2664,7 +2417,7 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable gray map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -2675,7 +2428,6 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
     1, if an error was detected, or
     0, if the header was read.
 */
-{
   int   count;
   char *next;
   int   step;
@@ -2683,24 +2435,19 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 
   step = 0;
 
-  while ( ( next = fgets ( line, MAX_LEN, file_pointer ) ) != NULL )
-  {
+  while ( ( next = fgets ( line, MAX_LEN, filein ) ) != NULL ) {
 
-    if ( line[0] == '#' )
-    {
+    if ( line[0] == '#' ) {
       continue;
     }
 
-    if ( step == 0 )
-    {
+    if ( step == 0 ) {
       count = sscanf ( next, "%s%n", word, &width );
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       next = next + width;
-      if ( strcmp ( word, "P2" ) != 0 && strcmp ( word, "p2" ) != 0 )
-      {
+      if ( strcmp ( word, "P2" ) != 0 && strcmp ( word, "p2" ) != 0 ) {
         printf ( "\n" );
         printf ( "PGMA_READ_HEADER: Fatal error.\n" );
         printf ( "  Bad magic number = %s.\n", word );
@@ -2709,33 +2456,30 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
       step = 1;
     }
 
-    if ( step == 1 )
-    {
+    if ( step == 1 ) {
+
       count = sscanf ( next, "%d%n", xsize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       step = 2;
     }
 
-    if ( step == 2 )
-    {
+    if ( step == 2 ) {
+
       count = sscanf ( next, "%d%n", ysize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       step = 3;
     }
-    if ( step == 3 )
-    {
+    if ( step == 3 ) {
+
       count = sscanf ( next, "%d%n", maxgray, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       return 0;
@@ -2751,17 +2495,14 @@ int pgma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 }
 /******************************************************************************/
 
-int pgma_read_test ( char *file_name )
+int pgma_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMA_READ_TEST tests the ASCII portable gray map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -2773,14 +2514,13 @@ int pgma_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable gray map data.
 
     Output, int PGMA_READ_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
   int *garray;
   int  maxgray;
   int  result;
@@ -2791,15 +2531,13 @@ int pgma_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = pgma_read ( file_name, &xsize, &ysize, &maxgray, &garray );
+  result = pgma_read ( filein_name, &xsize, &ysize, &maxgray, &garray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMA_READ_TEST: Fatal error!\n" );
     printf ( "  PGMA_READ failed.\n" );
-    if ( garray != NULL )
-    {
+    if ( garray != NULL ) {
       free ( garray );
     }
     return 1;
@@ -2809,13 +2547,11 @@ int pgma_read_test ( char *file_name )
 */
   result = pgm_check_data ( xsize, ysize, maxgray, garray );
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PGM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -2828,18 +2564,94 @@ int pgma_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pgma_write ( char *file_name, int xsize, int ysize, int *garray )
+int pgma_write ( char *fileout_name, int xsize, int ysize, int maxgray,
+  int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMA_WRITE writes the header and data for an ASCII portable gray map file.
  
+  Modified:
+ 
+    28 September 1998
+ 
+  Author:
+ 
+    John Burkardt
+
+  Parameters:
+
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
+    portable gray map data.
+
+    Input, int XSIZE, YSIZE, the number of rows and columns of data.
+
+    Input, int MAXGRAY, the maximum gray value.
+
+    Input, int *GARRAY, the array of XSIZE by YSIZE data values.
+
+    Output, int PGMA_WRITE, is
+    1, if an error was detected, or
+    0, if the file was written.
+*/
+  FILE *fileout;
+  int   result;
+
+  fileout = fopen ( fileout_name, "w" );
+
+  if ( fileout == NULL ) {
+    printf ( "\n" );
+    printf ( "PGMA_WRITE: Fatal error!\n" );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
+    return 1;
+  }
+/*
+  Write the header.
+*/
+  result = pgma_write_header ( fileout, fileout_name, xsize, ysize, maxgray );
+
+  if ( result != 0 ) {
+    printf ( "\n" );
+    printf ( "PGMA_WRITE: Fatal error!\n" );
+    printf ( "  PGMA_WRITE_HEADER failed.\n" );
+    return 1;
+  }
+/*
+  Write the data.
+*/
+  result = pgma_write_data ( fileout, xsize, ysize, garray );
+
+  if ( result != 0 ) {
+    printf ( "\n" );
+    printf ( "PGMA_WRITE: Fatal error!\n" );
+    printf ( "  PGMA_WRITE_DATA failed.\n" );
+    return 1;
+  }
+/*
+  Close the file.
+*/
+  fclose ( fileout );
+
+  return 0;
+}
+/******************************************************************************/
+
+int pgma_write_data ( FILE *fileout, int xsize, int ysize, int *garray ) {
+
+/******************************************************************************/
+
+/*
+  Purpose:
+
+    PGMA_WRITE_DATA writes the data for an ASCII portable gray map file.
+
   Example:
 
     P2
-    # feep.pgma created by PBMPAK(PGMA_WRITE).
+    # feep.pgm
     24 7
     15
     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
@@ -2849,110 +2661,7 @@ int pgma_write ( char *file_name, int xsize, int ysize, int *garray )
     0  3  0  0  0  0  0  7  0  0  0  0  0 11  0  0  0  0  0 15  0  0  0  0
     0  3  0  0  0  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15  0  0  0  0
     0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
- 
-    16 December 2002
- 
-  Author:
- 
-    John Burkardt
-
-  Parameters:
-
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
-    portable gray map data.
-
-    Input, int XSIZE, YSIZE, the number of rows and columns of data.
-
-    Input, int *GARRAY, the array of XSIZE by YSIZE data values.
-
-    Output, int PGMA_WRITE, is
-    1, if an error was detected, or
-    0, if the file was written.
-*/
-{
-  FILE *file_pointer;
-  int i;
-  int *indexg;
-  int j;
-  int maxgray;
-  int result;
-
-  file_pointer = fopen ( file_name, "w" );
-
-  if ( file_pointer == NULL )
-  {
-    printf ( "\n" );
-    printf ( "PGMA_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
-    return 1;
-  }
-/*
-  Compute the maximum.
-*/
-  maxgray = 0;
-  indexg = garray;
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      if ( maxgray < *indexg )
-      {
-        maxgray = *indexg;
-      }
-      indexg = indexg + 1;
-    }
-  }
-/*
-  Write the header.
-*/
-  result = pgma_write_header ( file_pointer, file_name, xsize, ysize, maxgray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PGMA_WRITE: Fatal error!\n" );
-    printf ( "  PGMA_WRITE_HEADER failed.\n" );
-    return 1;
-  }
-/*
-  Write the data.
-*/
-  result = pgma_write_data ( file_pointer, xsize, ysize, garray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PGMA_WRITE: Fatal error!\n" );
-    printf ( "  PGMA_WRITE_DATA failed.\n" );
-    return 1;
-  }
-/*
-  Close the file.
-*/
-  fclose ( file_pointer );
-
-  return 0;
-}
-/******************************************************************************/
-
-int pgma_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
-
-/******************************************************************************/
-/*
-  Purpose:
-
-    PGMA_WRITE_DATA writes the data for an ASCII portable gray map file.
-  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
+    
   Modified:
 
     28 September 1998
@@ -2963,7 +2672,7 @@ int pgma_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -2974,7 +2683,6 @@ int pgma_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
     1, if an error was detected, or
     0, if the data was written.
 */
-{
   int  i;
   int *indexg;
   int  j;
@@ -2982,22 +2690,19 @@ int pgma_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 
   indexg = garray;
   numval = 0;
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      fprintf ( file_pointer, "%d", *indexg );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
+      fprintf ( fileout, "%d", *indexg );
 
       numval = numval + 1;
       indexg = indexg + 1;
 
-      if ( numval%10 == 0 || i == xsize - 1 || numval == xsize * ysize )
-      {
-        fprintf ( file_pointer, "\n" );
+      if ( numval%10 == 0 || i == xsize - 1 || numval == xsize * ysize ) {
+        fprintf ( fileout, "\n" );
       }
-      else
-      {
-        fprintf ( file_pointer, " " );
+      else {
+        fprintf ( fileout, " " );
       }
 
     }
@@ -3006,22 +2711,33 @@ int pgma_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 }
 /******************************************************************************/
 
-int pgma_write_header ( FILE *file_pointer, char *file_name, int xsize, 
-  int ysize, int maxgray )
+int pgma_write_header ( FILE *fileout, char *fileout_name, int xsize, 
+  int ysize, int maxgray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMA_WRITE_HEADER writes the header of an ASCII portable gray map file.
 
-  Licensing:
+  Example:
 
-    This code is distributed under the GNU LGPL license. 
-
+    P2
+    # feep.pgm
+    24 7
+    15
+    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+    0  3  3  3  3  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15 15 15 15  0
+    0  3  0  0  0  0  0  7  0  0  0  0  0 11  0  0  0  0  0 15  0  0 15  0
+    0  3  3  3  0  0  0  7  7  7  0  0  0 11 11 11  0  0  0 15 15 15 15  0
+    0  3  0  0  0  0  0  7  0  0  0  0  0 11  0  0  0  0  0 15  0  0  0  0
+    0  3  0  0  0  0  0  7  7  7  7  0  0 11 11 11 11  0  0 15  0  0  0  0
+    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+    
   Modified:
 
-    13 December 2002
+    27 September 1998
 
   Author:
 
@@ -3029,10 +2745,10 @@ int pgma_write_header ( FILE *file_pointer, char *file_name, int xsize,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable gray map data.
 
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -3043,31 +2759,28 @@ int pgma_write_header ( FILE *file_pointer, char *file_name, int xsize,
     1, if an error was detected, or
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P2\n" );
-  fprintf ( file_pointer, "# %s created by PBMPAK(PGMA_WRITE).\n", file_name );
-  fprintf ( file_pointer, "%d %d\n", xsize, ysize );
-  fprintf ( file_pointer, "%d\n", maxgray );
+
+  fprintf ( fileout, "P2\n" );
+  fprintf ( fileout, "# %s\n", fileout_name );
+  fprintf ( fileout, "%d %d\n", xsize, ysize );
+  fprintf ( fileout, "%d\n", maxgray );
 
   return 0;
 }
 /******************************************************************************/
 
-int pgma_write_test ( char *file_name )
+int pgma_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMA_WRITE_TEST tests the ASCII portable gray map write routines.
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
-    16 December 2002
+    09 April 2001
 
   Author:
 
@@ -3075,15 +2788,20 @@ int pgma_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
     portable gray map data.
 
     Output, int PGMA_WRITE_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *garray;
+  int  i;
+  int *indexg;
+  int  j;
+  int  maxgray;
+  int  numbytes;
   int  result;
   int  xsize;
   int  ysize;
@@ -3093,35 +2811,44 @@ int pgma_write_test ( char *file_name )
   xsize = 300;
   ysize = 200;
 
-  garray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  garray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
+  garray = ( int * ) malloc ( numbytes );
 
-  if ( garray == NULL )
-  {
+  if ( garray == NULL ) {
     printf ( "\n" );
     printf ( "PGMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  result = pgm_example ( xsize, ysize, garray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PGMA_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PGM_EXAMPLE failed.\n" );
-    return 1;
+  indexg = garray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      *indexg = (255/(j+1) ) * ( (i+1)%(j+1) );
+      indexg = indexg + 1;
+    }
+  }
+/*
+  Compute the maximum.
+*/
+  maxgray = 0;
+  indexg = garray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      maxgray = MAX ( maxgray, *indexg );
+      indexg = indexg + 1;
+    }
   }
 
-  result = pgma_write ( file_name, xsize, ysize, garray );
+  result = pgma_write ( fileout_name, xsize, ysize, maxgray, garray );
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  PGMA_WRITE failed.\n" );
@@ -3132,19 +2859,16 @@ int pgma_write_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
-  int **garray )
+int pgmb_read ( char *filein_name, int *xsize, int *ysize, int *maxgray,
+  int **garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_READ reads the header and data from a binary portable gray map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     29 September 1998
@@ -3155,7 +2879,7 @@ int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable gray map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -3168,27 +2892,24 @@ int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
     1, if an error was detected, or
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "rb" );
+  filein = fopen ( filein_name, "rb" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PGMB_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = pgmb_read_header ( file_pointer, xsize, ysize, maxgray );
+  result = pgmb_read_header ( filein, xsize, ysize, maxgray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_READ: Fatal error!\n" );
     printf ( "  PGMB_READ_HEADER failed.\n" );
@@ -3201,8 +2922,7 @@ int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 
   *garray = ( int * ) malloc ( numbytes );
 
-  if ( *garray == NULL )
-  {
+  if ( *garray == NULL ) {
     printf ( "\n" );
     printf ( "PGMB_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -3212,10 +2932,9 @@ int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 /*
   Read the data.
 */
-  result = pgmb_read_data ( file_pointer, *xsize, *ysize, *garray );
+  result = pgmb_read_data ( filein, *xsize, *ysize, *garray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_READ: Fatal error!\n" );
     printf ( "  PGMB_READ_DATA failed.\n" );
@@ -3224,23 +2943,20 @@ int pgmb_read ( char *file_name, int *xsize, int *ysize, int *maxgray,
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int pgmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
+int pgmb_read_data ( FILE *filein, int xsize, int ysize, int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_READ_DATA reads the data in a binary portable gray map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3252,7 +2968,7 @@ int pgmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -3263,7 +2979,6 @@ int pgmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
     1, if an error was detected, or
     0, if the data was read.
 */
-{
   int   i;
   int   int_val;
   int  *indexg;
@@ -3273,20 +2988,17 @@ int pgmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
   indexg = garray;
   numval = 0;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      int_val = fgetc ( file_pointer );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
 
-      if ( int_val == EOF )
-      {
+      int_val = fgetc ( filein );
+
+      if ( int_val == EOF ) {
         printf ( "\n" );
         printf ( "PGMB_READ_DATA: Failed reading data byte %d.\n", numval );
         return 1;
       }
-      else
-      {
+      else {
         *indexg = int_val;
         indexg = indexg + 1;
       }
@@ -3297,17 +3009,14 @@ int pgmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 }
 /******************************************************************************/
 
-int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray )
+int pgmb_read_header ( FILE *filein, int *xsize, int *ysize, int *maxgray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_READ_HEADER reads the header of a binary portable gray map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3319,7 +3028,7 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable gray map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -3330,7 +3039,6 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
     1, if an error was detected, or
     0, if the header was read.
 */
-{
   int   c_val;
   int   count;
   int   flag;
@@ -3341,13 +3049,11 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
   state = 0;
   nchar = 0;
 
-  for ( ;; )
-  {
+  for ( ;; ) {
 
-    c_val = fgetc ( file_pointer );
+    c_val = fgetc ( filein );
 
-    if ( c_val == EOF )
-    {
+    if ( c_val == EOF ) {
       return 1;
     }
 /*
@@ -3355,33 +3061,26 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 */
     flag = isspace ( c_val );
 
-    if ( !flag )
-    {
+    if ( !flag ) {
       string[nchar] = c_val;
       nchar = nchar + 1;
     }
 /*
   See if we have finished an old item, or begun a new one.
 */
-    if ( state == 0 )
-      {
-      if ( !flag )
-      {
+    if ( state == 0 ) {
+      if ( !flag ) {
         state = 1;
       }
-      else
-      {
+      else {
         return 1;
       }
     }
-    else if ( state == 1 )
-      {
-      if ( flag )
-        {
+    else if ( state == 1 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
-        if ( strcmp ( string, "P5" ) != 0 && strcmp ( string, "p5" ) != 0 )
-        {
+        if ( strcmp ( string, "P5" ) != 0 && strcmp ( string, "p5" ) != 0 ) {
           printf ( "\n" );
           printf ( "PGMB_READ_HEADER: Fatal error.\n" );
           printf ( "  Bad magic number = %s.\n", string );
@@ -3391,66 +3090,51 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
         state = 2;
       }
     }
-    else if ( state == 2 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 2 ) {
+      if ( !flag ) {
         state = 3;
       }
     }
-    else if ( state == 3 )
-    {
-      if ( flag )
-      {
+    else if ( state == 3 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", xsize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
         state = 4;
       }
     }
-    else if ( state == 4 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 4 ) {
+      if ( !flag ) {
         state = 5;
       }
     }
-    else if ( state == 5 )
-    {
-      if ( flag )
-      {
+    else if ( state == 5 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", ysize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
         state = 6;
       }
     }
-    else if ( state == 6 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 6 ) {
+      if ( !flag ) {
         state = 7;
       }
     }
-    else if ( state == 7 )
-    {
-      if ( flag )
-      {
+    else if ( state == 7 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", maxgray );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
@@ -3461,17 +3145,14 @@ int pgmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxgray 
 }
 /******************************************************************************/
 
-int pgmb_read_test ( char *file_name )
+int pgmb_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_READ_TEST tests the binary portable gray map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3483,14 +3164,13 @@ int pgmb_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable gray map data.
 
     Output, int PGMB_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
   int *garray;
   int  maxgray;
   int  result;
@@ -3501,15 +3181,13 @@ int pgmb_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = pgmb_read ( file_name, &xsize, &ysize, &maxgray, &garray );
+  result = pgmb_read ( filein_name, &xsize, &ysize, &maxgray, &garray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_READ_TEST: Fatal error!\n" );
     printf ( "  PGMB_READ failed.\n" );
-    if ( garray != NULL )
-    {
+    if ( garray != NULL ) {
       free ( garray );
     }
     return 1;
@@ -3519,13 +3197,11 @@ int pgmb_read_test ( char *file_name )
 */
   result = pgm_check_data ( xsize, ysize, maxgray, garray );
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PGM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -3538,21 +3214,19 @@ int pgmb_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int pgmb_write ( char *file_name, int xsize, int ysize, int *garray )
+int pgmb_write ( char *fileout_name, int xsize, int ysize, int maxgray,
+  int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_WRITE writes the header and data for a binary portable gray map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
-    16 December 2002
+    29 September 1998
  
   Author:
  
@@ -3560,10 +3234,12 @@ int pgmb_write ( char *file_name, int xsize, int ysize, int *garray )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
+
+    Input, int MAXGRAY, the maximum gray value.
 
     Input, int *GARRAY, the array of XSIZE by YSIZE data values.
 
@@ -3571,45 +3247,23 @@ int pgmb_write ( char *file_name, int xsize, int ysize, int *garray )
     1, if an error was detected, or
     0, if the file was written.
 */
-{
-  FILE *file_pointer;
-  int i;
-  int *indexg;
-  int j;
-  int maxgray;
-  int result;
+  FILE *fileout;
+  int   result;
 
-  maxgray = 0;
-  indexg = garray;
+  fileout = fopen ( fileout_name, "wb" );
 
-  for ( i = 0; i < xsize; i++ )
-  {
-    for ( j = 0; j < ysize; j++ )
-    {
-      if ( maxgray < *indexg )
-      {
-        maxgray = *indexg;
-      }
-      indexg = indexg + 1;
-    }
-  }
-
-  file_pointer = fopen ( file_name, "wb" );
-
-  if ( file_pointer == NULL )
-  {
+  if ( fileout == NULL ) {
     printf ( "\n" );
     printf ( "PGMB_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
     return 1;
   }
 /*
   Write the header.
 */
-  result = pgmb_write_header ( file_pointer, xsize, ysize, maxgray );
+  result = pgmb_write_header ( fileout, xsize, ysize, maxgray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_WRITE: Fatal error!\n" );
     printf ( "  PGMB_WRITE_HEADER failed.\n" );
@@ -3618,10 +3272,9 @@ int pgmb_write ( char *file_name, int xsize, int ysize, int *garray )
 /*
   Write the data.
 */
-  result = pgmb_write_data ( file_pointer, xsize, ysize, garray );
+  result = pgmb_write_data ( fileout, xsize, ysize, garray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_WRITE: Fatal error!\n" );
     printf ( "  PGMB_WRITE_DATA failed.\n" );
@@ -3630,23 +3283,20 @@ int pgmb_write ( char *file_name, int xsize, int ysize, int *garray )
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( fileout );
 
   return 0;
 }
 /******************************************************************************/
 
-int pgmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
+int pgmb_write_data ( FILE *fileout, int xsize, int ysize, int *garray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_WRITE_DATA writes the data for a binary portable gray map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3658,7 +3308,7 @@ int pgmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -3669,18 +3319,15 @@ int pgmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
     1, if an error was detected, or
     0, if the data was written.
 */
-{
   int  i;
   int *indexg;
   int  j;
 
   indexg = garray;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      fputc ( *indexg, file_pointer );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      fputc ( *indexg, fileout );
       indexg = indexg + 1;
     }
   }
@@ -3689,17 +3336,14 @@ int pgmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *garray )
 }
 /******************************************************************************/
 
-int pgmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxgray )
+int pgmb_write_header ( FILE *fileout, int xsize, int ysize, int maxgray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_WRITE_HEADER writes the header of a binary portable gray map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3711,7 +3355,7 @@ int pgmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxgray )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable gray map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -3722,28 +3366,25 @@ int pgmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxgray )
     1, if an error was detected, or
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P5 %d %d %d ", xsize, ysize, maxgray );
+
+  fprintf ( fileout, "P5 %d %d %d ", xsize, ysize, maxgray );
 
   return 0;
 }
 /******************************************************************************/
 
-int pgmb_write_test ( char *file_name )
+int pgmb_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PGMB_WRITE_TEST tests the binary portable gray map write routines.
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
-    16 December 2002
+    03 October 1998
 
   Author:
 
@@ -3751,15 +3392,20 @@ int pgmb_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable gray map data.
 
     Output, int PGMB_WRITE_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
+
   int *garray;
+  int  i;
+  int *indexg;
+  int  j;
+  int  maxgray;
+  int  numbytes;
   int  result;
   int  xsize;
   int  ysize;
@@ -3769,35 +3415,44 @@ int pgmb_write_test ( char *file_name )
   xsize = 300;
   ysize = 200;
 
-  garray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  garray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
+  garray = ( int * ) malloc ( numbytes );
 
-  if ( garray == NULL )
-  {
+  if ( garray == NULL ) {
     printf ( "\n" );
     printf ( "PGMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  result = pgm_example ( xsize, ysize, garray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PGMB_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PGM_EXAMPLE failed.\n" );
-    return 1;
+  indexg = garray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      *indexg = (i+1)%(j+1);
+      indexg = indexg + 1;
+    }
+  }
+/*
+  Compute the maximum.
+*/
+  maxgray = 0;
+  indexg = garray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      maxgray = MAX ( maxgray, *indexg );
+      indexg = indexg + 1;
+    }
   }
 
-  result = pgmb_write ( file_name, xsize, ysize, garray );
+  result = pgmb_write ( fileout_name, xsize, ysize, maxgray, garray );
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PGMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  PGMB_WRITE failed.\n" );
@@ -3809,9 +3464,10 @@ int pgmb_write_test ( char *file_name )
 /******************************************************************************/
 
 int ppm_check_data ( int xsize, int ysize, int maxrgb, int *rarray,
-  int *garray, int *barray )
+  int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
@@ -3827,10 +3483,6 @@ int ppm_check_data ( int xsize, int ysize, int maxrgb, int *rarray,
      0  0  0    0 15  7    0  0  0    0  0  0
      0  0  0    0  0  0    0 15  7    0  0  0
     15  0 15    0  0  0    0  0  0    0  0  0
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -3853,87 +3505,71 @@ int ppm_check_data ( int xsize, int ysize, int maxrgb, int *rarray,
     1, if an error was detected, or
     0, if the data was legal.
 */
-{
   int  i;
   int *index;
   int  j;
   int  k;
 
-  if ( xsize <= 0 )
-  {
+  if ( xsize <= 0 ) {
     printf ( "\n" );
     printf ( "PPM_CHECK_DATA: 0 >= XSIZE = %d.\n", xsize );
     return 1;
   }
 
-  if ( ysize <= 0 )
-  {
+  if ( ysize <= 0 ) {
     printf ( "\n" );
     printf ( "PPM_CHECK_DATA: 0 >= YSIZE = %d.\n", ysize );
     return 1;
   }
 
-  if ( rarray == NULL || garray == NULL || barray == NULL )
-  {
+  if ( rarray == NULL || garray == NULL || barray == NULL ) {
     printf ( "\n" );
     printf ( "PPM_CHECK_DATA: Null pointer to data.\n" );
     return 1;
   }
 
-  for ( k = 0; k < 3; k++ )
-  {
-    if ( k == 0 )
-    {
+  for ( k = 0; k < 3; k++ ) {
+
+    if ( k == 0 ) {
       index = rarray;
     }
-    else if ( k == 1 )
-    {
+    else if ( k == 1 ) {
       index = garray;
     }
-    else if ( k == 2 )
-    {
+    else if ( k == 2 ) {
       index = barray;
     }
 
-    for ( j = 0; j < ysize; j++ )
-    {
-      for ( i = 0; i < xsize; i++ )
-      {
-        if ( *index < 0 )
-        {
-          if ( k == 0 )
-          {
+    for ( j = 0; j < ysize; j++ ) {
+      for ( i = 0; i < xsize; i++ ) {
+
+        if ( *index < 0 ) {
+          if ( k == 0 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: R(%d,%d) = %d < 0.\n", i, j, *index );
           }
-          else if ( k == 1 )
-          {
+          else if ( k == 1 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: G(%d,%d) = %d < 0.\n", i, j, *index );
           }
-          else if ( k == 2 )
-          {
+          else if ( k == 2 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: B(%d,%d) = %d < 0.\n", i, j, *index );
           }
           return 1;
         }
-        else if ( *index > maxrgb )
-        {
-          if ( k == 0 )
-          {
+        else if ( *index > maxrgb ) {
+          if ( k == 0 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: R(%d,%d) = %d > %d.\n", i, j, *index, 
               maxrgb );
           }
-          else if ( k == 1 )
-          {
+          else if ( k == 1 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: G(%d,%d) = %d > %d.\n", i, j, *index, 
               maxrgb );
           }
-          else if ( k == 2 )
-          {
+          else if ( k == 2 ) {
             printf ( "\n" );
             printf ( "PPM_CHECK_DATA: B(%d,%d) = %d > %d.\n", i, j, *index, 
               maxrgb );
@@ -3950,115 +3586,16 @@ int ppm_check_data ( int xsize, int ysize, int maxrgb, int *rarray,
 }
 /******************************************************************************/
 
-int ppm_example ( int xsize, int ysize, int *rarray, int *garray, int *barray )
+int ppma_read ( char *filein_name, int *xsize, int *ysize, int *maxrgb,
+  int **rarray, int **garray, int **barray ) {
 
 /******************************************************************************/
-/*
-  Purpose:
 
-    PPM_EXAMPLE sets up some PPM data.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
-
-    16 December 2002
-
-  Author:
-
-    John Burkardt
-
-  Parameters:
-
-    Input, int XSIZE, YSIZE, the number of rows and columns of data.
-    Values of 200 would be reasonable.
-
-    Output, int *RARRAY, *GARRAY, *BARRAY, the arrays of XSIZE by YSIZE 
-    RGB values.
-
-    Output, int PPM_EXAMPLE, is
-    0, if no error occurred,
-    1, if an error occurred.
-*/
-{
-  float f1;
-  float f2;
-  float f3;
-  int i;
-  int *indexr;
-  int *indexg;
-  int *indexb;
-  int j;
-  float x;
-  float y;
-
-  indexr = rarray;
-  indexg = garray;
-  indexb = barray;
-
-  for ( i = 0; i < ysize; i++ )
-  {
-    y = ( float ) ( ysize + 1 - i ) / ( float ) ( ysize - 1 );
-    for ( j = 0; j < xsize; j++ )
-    {
-      x = ( float ) ( j ) / ( float ) ( xsize - 1 );
-
-      f1 = 4.0 * ( x - 0.5 ) * ( x - 0.5 );
-      f2 = sin ( 3.14159265 * x );
-      f3 = x;
-
-      if ( y <= f1 )
-      {
-        *indexr = ( int ) ( 255.0 * f1 );
-      }
-      else
-      {
-        *indexr = 50;
-      }
-
-      if ( y <= f2 )
-      {
-        *indexg = ( int ) ( 255.0 * f2 );
-      }
-      else
-      {
-        *indexg = 150;
-      }
-
-      if ( y <= f3 )
-      {
-        *indexb = ( int ) ( 255.0 * f3 );
-      }
-      else
-      {
-        *indexb = 250;
-      }
-
-      indexr = indexr + 1;
-      indexg = indexg + 1;
-      indexb = indexb + 1;
-    }
-  }
-
-  return 0;
-}
-/******************************************************************************/
-
-int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
-  int **rarray, int **garray, int **barray )
-
-/******************************************************************************/
 /*
   Purpose:
 
     PPMA_READ reads the header and data from an ASCII portable pixel map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     03 October 1998
@@ -4069,7 +3606,7 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable pixel map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -4083,27 +3620,24 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
     1, if an error was detected, or
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "r" );
+  filein = fopen ( filein_name, "r" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = ppma_read_header ( file_pointer, xsize, ysize, maxrgb );
+  result = ppma_read_header ( filein, xsize, ysize, maxrgb );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
     printf ( "  PPMA_READ_HEADER failed.\n" );
@@ -4116,8 +3650,7 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *rarray = ( int * ) malloc ( numbytes );
 
-  if ( *rarray == NULL )
-  {
+  if ( *rarray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4127,8 +3660,7 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *garray = ( int * ) malloc ( numbytes );
 
-  if ( *garray == NULL )
-  {
+  if ( *garray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4138,8 +3670,7 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *barray = ( int * ) malloc ( numbytes );
 
-  if ( *barray == NULL )
-  {
+  if ( *barray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4149,11 +3680,9 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 /*
   Read the data.
 */
-  result = ppma_read_data ( file_pointer, *xsize, *ysize, *rarray, 
-    *garray, *barray );
+  result = ppma_read_data ( filein, *xsize, *ysize, *rarray, *garray, *barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMA_READ: Fatal error!\n" );
     printf ( "  PPMA_READ_DATA failed.\n" );
@@ -4162,24 +3691,21 @@ int ppma_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int ppma_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
-  int *garray, int *barray )
+int ppma_read_data ( FILE *filein, int xsize, int ysize, int *rarray,
+  int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_READ_DATA reads the data in an ASCII portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -4191,7 +3717,7 @@ int ppma_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -4203,7 +3729,6 @@ int ppma_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
     1, if an error was detected, or
     0, if the data was read.
 */
-{
   int   count;
   int   i;
   int  *indexb;
@@ -4220,59 +3745,51 @@ int ppma_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
   indexr = rarray;
   indexg = garray;
   indexb = barray;
-  need_line = 1;
+  need_line = TRUE;
   next = NULL;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      for ( k = 0; k < 3; k++ )
-      {
-        need_value = 1;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      for ( k = 0; k < 3; k++ ) {
 
-        while ( need_value == 1 )
-        {
-          if ( need_line == 1 )
-          {
-            next = fgets ( line, MAX_LEN, file_pointer );
+        need_value = TRUE;
 
-            if ( next == NULL )
-            {
+        while ( need_value == TRUE ) {
+
+          if ( need_line == TRUE ) {
+
+            next = fgets ( line, MAX_LEN, filein );
+
+            if ( next == NULL ) {
               printf ( "\n" );
               printf ( "PPMA_READ_DATA: Fatal error.\n" );
               printf ( "  End of input.\n" );
               return 1;
             }
-            need_line = 0;
+            need_line = FALSE;
           }
 
           count = sscanf ( next, "%s%n", word, &width );
 
-          if ( count == EOF )
-          {
-            need_line = 1;
+          if ( count == EOF ) {
+            need_line = TRUE;
           }
-          else
-          {
+          else {
             next = next + width;
             count = sscanf ( word, "%d", &ival );
-            if ( k == 0 )
-            {
+            if ( k == 0 ) {
               *indexr = ival;
               indexr = indexr + 1;
             }
-            else if ( k == 1 )
-            {
+            else if ( k == 1 ) {
               *indexg = ival;
               indexg = indexg + 1;
             }
-            else if ( k == 2 )
-            {
+            else if ( k == 2 ) {
               *indexb = ival;
               indexb = indexb + 1;
             }
-            need_value = 0;
+            need_value = FALSE;
           }
 
         }
@@ -4284,17 +3801,14 @@ int ppma_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 }
 /******************************************************************************/
 
-int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
+int ppma_read_header ( FILE *filein, int *xsize, int *ysize, int *maxrgb ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_READ_HEADER reads the header of an ASCII portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -4306,7 +3820,7 @@ int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the ASCII
+    Input, FILE *FILEIN, a pointer to the file containing the ASCII
     portable pixel map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -4317,7 +3831,6 @@ int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
     1, if an error was detected, or
     0, if the header was read.
 */
-{
   int   count;
   char *next;
   int   step;
@@ -4325,23 +3838,19 @@ int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 
   step = 0;
 
-  while ( ( next = fgets ( line, MAX_LEN, file_pointer ) ) != NULL )
-  {
-    if ( line[0] == '#' )
-    {
+  while ( ( next = fgets ( line, MAX_LEN, filein ) ) != NULL ) {
+
+    if ( line[0] == '#' ) {
       continue;
     }
 
-    if ( step == 0 )
-    {
+    if ( step == 0 ) {
       count = sscanf ( next, "%s%n", word, &width );
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       next = next + width;
-      if ( strcmp ( word, "P3" ) != 0 && strcmp ( word, "p3" ) != 0 )
-      {
+      if ( strcmp ( word, "P3" ) != 0 && strcmp ( word, "p3" ) != 0 ) {
         printf ( "\n" );
         printf ( "PPMA_READ_HEADER: Fatal error.\n" );
         printf ( "  Bad magic number = %s.\n", word );
@@ -4350,34 +3859,30 @@ int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
       step = 1;
     }
 
-    if ( step == 1 )
-    {
+    if ( step == 1 ) {
 
       count = sscanf ( next, "%d%n", xsize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       step = 2;
     }
 
-    if ( step == 2 )
-    {
+    if ( step == 2 ) {
+
       count = sscanf ( next, "%d%n", ysize, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       step = 3;
     }
-    if ( step == 3 )
-    {
+    if ( step == 3 ) {
+
       count = sscanf ( next, "%d%n", maxrgb, &width );
       next = next + width;
-      if ( count == EOF )
-      {
+      if ( count == EOF ) {
         continue;
       }
       return 0;
@@ -4393,17 +3898,14 @@ int ppma_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 }
 /******************************************************************************/
 
-int ppma_read_test ( char *file_name )
+int ppma_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_READ_TEST tests the ASCII portable pixel map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -4415,14 +3917,13 @@ int ppma_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the ASCII
+    Input, char *FILEIN_NAME, the name of the file containing the ASCII
     portable pixel map data.
 
     Output, int PBMA_READ_TEST, is
     1, if an error was detected, or
     0, if the test was carried out.
 */
-{
   int *barray;
   int *garray;
   int  maxrgb;
@@ -4437,24 +3938,20 @@ int ppma_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = ppma_read ( file_name, &xsize, &ysize, &maxrgb, &rarray,
+  result = ppma_read ( filein_name, &xsize, &ysize, &maxrgb, &rarray,
     &garray, &barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMA_READ_TEST: Fatal error!\n" );
     printf ( "  PPMA_READ failed.\n" );
-    if ( rarray != NULL )
-    {
+    if ( rarray != NULL ) {
       free ( rarray );
     }
-    if ( garray != NULL )
-    {
+    if ( garray != NULL ) {
       free ( garray );
     }
-    if ( barray != NULL )
-    {
+    if ( barray != NULL ) {
       free ( barray );
     }
     return 1;
@@ -4464,20 +3961,16 @@ int ppma_read_test ( char *file_name )
 */
   result = ppm_check_data ( xsize, ysize, maxrgb, rarray, garray, barray );
 
-  if ( rarray != NULL )
-  {
+  if ( rarray != NULL ) {
     free ( rarray );
   }
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PPM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -4490,15 +3983,94 @@ int ppma_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int ppma_write ( char *file_name, int xsize, int ysize, int *rarray, 
-  int *garray, int *barray )
+int ppma_write ( char *fileout_name, int xsize, int ysize, int maxrgb,
+  int *rarray, int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_WRITE writes the header and data for an ASCII portable pixel map file.
  
+  Modified:
+ 
+    28 September 1998
+ 
+  Author:
+ 
+    John Burkardt
+
+  Parameters:
+
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
+    portable pixel map data.
+
+    Input, int XSIZE, YSIZE, the number of rows and columns of data.
+
+    Input, int MAXRGB, the maximum RGB value.
+
+    Input, int *RARRAY, *GARRAY, *BARRAY, the arrays of XSIZE by YSIZE 
+    data values.
+
+    Output, int PPMA_WRITE, is
+    1, if an error was detected, or
+    0, if the file was written.
+*/
+  FILE *fileout;
+  int   result;
+/*
+  Open the output file.
+*/
+  fileout = fopen ( fileout_name, "w" );
+
+  if ( fileout == NULL ) {
+    printf ( "\n" );
+    printf ( "PPMA_WRITE: Fatal error!\n" );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
+    return 1;
+  }
+/*
+  Write the header.
+*/
+  result = ppma_write_header ( fileout, fileout_name, xsize, ysize, maxrgb );
+
+  if ( result != 0 ) {
+    printf ( "\n" );
+    printf ( "PPMA_WRITE: Fatal error!\n" );
+    printf ( "  PPMA_WRITE_HEADER failed.\n" );
+    return 1;
+  }
+/*
+  Write the data.
+*/
+  result = ppma_write_data ( fileout, xsize, ysize, rarray, garray, barray );
+
+  if ( result != 0 ) {
+    printf ( "\n" );
+    printf ( "PPMA_WRITE: Fatal error!\n" );
+    printf ( "  PPMA_WRITE_DATA failed.\n" );
+    return 1;
+  }
+/*
+  Close the file.
+*/
+  fclose ( fileout );
+
+  return 0;
+}
+/******************************************************************************/
+
+int ppma_write_data ( FILE *fileout, int xsize, int ysize, int *rarray,
+  int *garray, int *barray ) {
+
+/******************************************************************************/
+
+/*
+  Purpose:
+
+    PPMA_WRITE_DATA writes the data for an ASCII portable pixel map file.
+
   Example:
 
     P3
@@ -4510,119 +4082,6 @@ int ppma_write ( char *file_name, int xsize, int ysize, int *rarray,
      0  0  0    0  0  0    0 15  7    0  0  0
     15  0 15    0  0  0    0  0  0    0  0  0
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
- 
-    16 December 2002
- 
-  Author:
- 
-    John Burkardt
-
-  Parameters:
-
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
-    portable pixel map data.
-
-    Input, int XSIZE, YSIZE, the number of rows and columns of data.
-
-    Input, int *RARRAY, *GARRAY, *BARRAY, the arrays of XSIZE by YSIZE 
-    data values.
-
-    Output, int PPMA_WRITE, is
-    1, if an error was detected, or
-    0, if the file was written.
-*/
-{
-  FILE *file_pointer;
-  int i;
-  int *indexb;
-  int *indexg;
-  int *indexr;
-  int j;
-  int maxrgb;
-  int result;
-/*
-  Open the output file.
-*/
-  file_pointer = fopen ( file_name, "w" );
-
-  if ( file_pointer == NULL )
-  {
-    printf ( "\n" );
-    printf ( "PPMA_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
-    return 1;
-  }
-/*
-  Compute the maximum.
-*/
-  maxrgb = 0;
-  indexr = rarray;
-  indexg = garray;
-  indexb = barray;
-
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      maxrgb = MAX ( maxrgb, *indexr );
-      maxrgb = MAX ( maxrgb, *indexg );
-      maxrgb = MAX ( maxrgb, *indexb );
-      indexr = indexr + 1;
-      indexg = indexg + 1;
-      indexb = indexb + 1;
-    }
-  }
-/*
-  Write the header.
-*/
-  result = ppma_write_header ( file_pointer, file_name, xsize, ysize, maxrgb );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PPMA_WRITE: Fatal error!\n" );
-    printf ( "  PPMA_WRITE_HEADER failed.\n" );
-    return 1;
-  }
-/*
-  Write the data.
-*/
-  result = ppma_write_data ( file_pointer, xsize, ysize, rarray, garray, barray );
-
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PPMA_WRITE: Fatal error!\n" );
-    printf ( "  PPMA_WRITE_DATA failed.\n" );
-    return 1;
-  }
-/*
-  Close the file.
-*/
-  fclose ( file_pointer );
-
-  return 0;
-}
-/******************************************************************************/
-
-int ppma_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
-  int *garray, int *barray )
-
-/******************************************************************************/
-/*
-  Purpose:
-
-    PPMA_WRITE_DATA writes the data for an ASCII portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
     28 September 1998
@@ -4633,7 +4092,7 @@ int ppma_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -4645,7 +4104,6 @@ int ppma_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
     1, if an error was detected, or
     0, if the data was written.
 */
-{
   int  i;
   int *indexb;
   int *indexg;
@@ -4657,23 +4115,20 @@ int ppma_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
   indexg = garray;
   indexb = barray;
   numval = 0;
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      fprintf ( file_pointer, "%d %d %d", *indexr, *indexg, *indexb );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+
+      fprintf ( fileout, "%d %d %d", *indexr, *indexg, *indexb );
       numval = numval + 3;
       indexr = indexr + 1;
       indexg = indexg + 1;
       indexb = indexb + 1;
 
-      if ( numval%12 == 0 || i == xsize - 1 || numval == 3 * xsize * ysize )
-      {
-        fprintf ( file_pointer, "\n" );
+      if ( numval%12 == 0 || i == xsize - 1 || numval == 3 * xsize * ysize ) {
+        fprintf ( fileout, "\n" );
       }
-      else
-      {
-        fprintf ( file_pointer, " " );
+      else {
+        fprintf ( fileout, " " );
       }
 
     }
@@ -4682,22 +4137,30 @@ int ppma_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 }
 /******************************************************************************/
 
-int ppma_write_header ( FILE *file_pointer, char *file_name, int xsize, 
-  int ysize, int maxrgb )
+int ppma_write_header ( FILE *fileout, char *fileout_name, int xsize, 
+  int ysize, int maxrgb ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_WRITE_HEADER writes the header of an ASCII portable pixel map file.
 
-  Licensing:
+  Example:
 
-    This code is distributed under the GNU LGPL license. 
+    P3
+    # feep.ppm
+    4 4
+    15
+     0  0  0    0  0  0    0  0  0   15  0 15
+     0  0  0    0 15  7    0  0  0    0  0  0
+     0  0  0    0  0  0    0 15  7    0  0  0
+    15  0 15    0  0  0    0  0  0    0  0  0
 
   Modified:
 
-    13 December 2002
+    28 September 1998
 
   Author:
 
@@ -4705,7 +4168,7 @@ int ppma_write_header ( FILE *file_pointer, char *file_name, int xsize,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the ASCII
+    Input, FILE *FILEOUT, a pointer to the file to contain the ASCII
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -4716,31 +4179,28 @@ int ppma_write_header ( FILE *file_pointer, char *file_name, int xsize,
     1, if an error was detected, or
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P3\n" );
-  fprintf ( file_pointer, "# %s created by PBMPAK(PPMA_WRITE).\n", file_name );
-  fprintf ( file_pointer, "%d %d\n", xsize, ysize );
-  fprintf ( file_pointer, "%d\n", maxrgb );
+
+  fprintf ( fileout, "P3\n" );
+  fprintf ( fileout, "# %s\n", fileout_name );
+  fprintf ( fileout, "%d %d\n", xsize, ysize );
+  fprintf ( fileout, "%d\n", maxrgb );
 
   return 0;
 }
 /******************************************************************************/
 
-int ppma_write_test ( char *file_name )
+int ppma_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMA_WRITE_TEST tests the ASCII portable pixel map write routines.
 
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
 
-    13 December 2002
+    03 October 1998
 
   Author:
 
@@ -4748,90 +4208,132 @@ int ppma_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the ASCII
+    Input, char *FILEOUT_NAME, the name of the file to contain the ASCII
     portable pixel map data.
 
     Output, int PPMA_WRITE_TEST, equals
     1, if the test could not be carried out,
     0, if the test was carried out.
 */
-{
   int *barray;
   int *garray;
+  int  i;
+  int *indexb;
+  int *indexg;
+  int *indexr;
+  int  j;
   int  maxrgb;
+  int  numbytes;
   int *rarray;
   int  result;
   int  xsize;
   int  ysize;
 
-  xsize = 300;
-  ysize = 300;
+  xsize = 200;
+  ysize = 200;
 /*
   Allocate memory.
 */
-  rarray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  rarray = NULL;
+  garray = NULL;
+  barray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
 
-  if ( rarray == NULL )
-  {
+  rarray = ( int * ) malloc ( numbytes );
+
+  if ( rarray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  garray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  garray = ( int * ) malloc ( numbytes );
 
-  if ( garray == NULL )
-  {
+  if ( garray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  barray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  barray = ( int * ) malloc ( numbytes );
 
-  if ( barray == NULL )
-  {
+  if ( barray == NULL ) {
     printf ( "\n" );
     printf ( "PPMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 /*
   Set the data.
 */
-  result = ppm_example ( xsize, ysize, rarray, garray, barray );
+  indexr = rarray;
+  indexg = garray;
+  indexb = barray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      if ( j >= i ) {
+        *indexr = 255;
+        *indexg = 0;
+        *indexb = 0;
+      }
+      else if ( ( xsize - 1 ) * j + ( ysize - 1 ) * i <= 
+        ( xsize - 1 ) * ( ysize - 1 ) ) {
+        *indexr = 0;
+        *indexg = 255;
+        *indexb = 0;
+      }
+      else {
+        *indexr = 0;
+        *indexg = 0;
+        *indexb = 255;
+      }
+      indexr = indexr + 1;
+      indexg = indexg + 1;
+      indexb = indexb + 1;
+    }
+  }
+/*
+  Compute the maximum.
+*/
+  maxrgb = 0;
+  indexr = rarray;
+  indexg = garray;
+  indexb = barray;
 
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PPMA_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PPM_EXAMPLE failed.\n" );
-    return 1;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      maxrgb = MAX ( maxrgb, *indexr );
+      maxrgb = MAX ( maxrgb, *indexg );
+      maxrgb = MAX ( maxrgb, *indexb );
+      indexr = indexr + 1;
+      indexg = indexg + 1;
+      indexb = indexb + 1;
+    }
   }
 /*
   Write the data to the file.
 */
-  result = ppma_write ( file_name, xsize, ysize, rarray, garray, barray );
+  result = ppma_write ( fileout_name, xsize, ysize, maxrgb, rarray, garray,
+    barray );
 
-  if ( rarray != NULL )
-  {
+  if ( rarray != NULL ) {
     free ( rarray );
   }
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMA_WRITE_TEST: Fatal error!\n" );
     printf ( "  PPMA_WRITE failed.\n" );
@@ -4842,19 +4344,16 @@ int ppma_write_test ( char *file_name )
 }
 /******************************************************************************/
 
-int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
-  int **rarray, int **garray, int **barray )
+int ppmb_read ( char *filein_name, int *xsize, int *ysize, int *maxrgb,
+  int **rarray, int **garray, int **barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_READ reads the header and data from a binary portable pixel map file.
  
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
     04 October 1998
@@ -4865,7 +4364,7 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable pixel map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -4879,27 +4378,24 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
     1, if the file could not be read,
     0, if the file was read.
 */
-{
-  FILE *file_pointer;
+  FILE *filein;
   int   numbytes;
   int   result;
 
-  file_pointer = fopen ( file_name, "rb" );
+  filein = fopen ( filein_name, "rb" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( filein == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
-    printf ( "  Cannot open the input file %s.\n", file_name );
+    printf ( "  Cannot open the input file %s.\n", filein_name );
     return 1;
   }
 /*
   Read the header.
 */
-  result = ppmb_read_header ( file_pointer, xsize, ysize, maxrgb );
+  result = ppmb_read_header ( filein, xsize, ysize, maxrgb );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
     printf ( "  PPMB_READ_HEADER failed.\n" );
@@ -4912,8 +4408,7 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *rarray = ( int * ) malloc ( numbytes );
 
-  if ( *rarray == NULL )
-  {
+  if ( *rarray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4923,8 +4418,7 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *garray = ( int * ) malloc ( numbytes );
 
-  if ( *garray == NULL )
-  {
+  if ( *garray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4934,8 +4428,7 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 
   *barray = ( int * ) malloc ( numbytes );
 
-  if ( *barray == NULL )
-  {
+  if ( *barray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
@@ -4945,11 +4438,9 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 /*
   Read the data.
 */
-  result = ppmb_read_data ( file_pointer, *xsize, *ysize, *rarray, 
-    *garray, *barray );
+  result = ppmb_read_data ( filein, *xsize, *ysize, *rarray, *garray, *barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_READ: Fatal error!\n" );
     printf ( "  PPMB_READ_DATA failed.\n" );
@@ -4958,24 +4449,21 @@ int ppmb_read ( char *file_name, int *xsize, int *ysize, int *maxrgb,
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( filein );
 
   return 0;
 }
 /******************************************************************************/
 
-int ppmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray, 
-  int *garray, int *barray )
+int ppmb_read_data ( FILE *filein, int xsize, int ysize, int *rarray, 
+  int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_READ_DATA reads the data in a binary portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -4987,7 +4475,7 @@ int ppmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -4999,7 +4487,6 @@ int ppmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
     1, if the data could not be read,
     0, if the data was read.
 */
-{
   int   i;
   int   int_val;
   int  *indexb;
@@ -5014,34 +4501,28 @@ int ppmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
   indexb = barray;
   numval = 0;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      for ( k = 0; k < 3; k++ )
-      {
-        int_val = fgetc ( file_pointer );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
 
-        if ( int_val == EOF )
-        {
+      for ( k = 0; k < 3; k++ ) {
+
+        int_val = fgetc ( filein );
+
+        if ( int_val == EOF ) {
           printf ( "\n" );
           printf ( "PPMB_READ_DATA: Failed reading data byte %d.\n", numval );
           return 1;
         }
-        else
-        {
-          if ( k == 0 )
-          {
+        else {
+          if ( k == 0 ) {
             *indexr = int_val;
             indexr = indexr + 1;
           }
-          else if ( k == 1 )
-          {
+          else if ( k == 1 ) {
             *indexg = int_val;
             indexg = indexg + 1;
           }
-          else if ( k == 2 )
-          {
+          else if ( k == 2 ) {
             *indexb = int_val;
             indexb = indexb + 1;
           }
@@ -5054,17 +4535,14 @@ int ppmb_read_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 }
 /******************************************************************************/
 
-int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
+int ppmb_read_header ( FILE *filein, int *xsize, int *ysize, int *maxrgb ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_READ_HEADER reads the header of a binary portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -5076,7 +4554,7 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file containing the binary
+    Input, FILE *FILEIN, a pointer to the file containing the binary
     portable pixel map data.
 
     Output, int *XSIZE, *YSIZE, the number of rows and columns of data.
@@ -5087,7 +4565,6 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
     1, if the header could not be read,
     0, if the header was read.
 */
-{
   int   c_val;
   int   count;
   int   flag;
@@ -5098,12 +4575,11 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
   state = 0;
   nchar = 0;
 
-  for ( ;; )
-  {
-    c_val = fgetc ( file_pointer );
+  for ( ;; ) {
 
-    if ( c_val == EOF )
-    {
+    c_val = fgetc ( filein );
+
+    if ( c_val == EOF ) {
       return 1;
     }
 /*
@@ -5111,33 +4587,26 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 */
     flag = isspace ( c_val );
 
-    if ( !flag )
-    {
+    if ( !flag ) {
       string[nchar] = c_val;
       nchar = nchar + 1;
     }
 /*
   See if we have finished an old item, or begun a new one.
 */
-    if ( state == 0 )
-    {
-      if ( !flag )
-      {
+    if ( state == 0 ) {
+      if ( !flag ) {
         state = 1;
       }
-      else
-      {
+      else {
         return 1;
       }
     }
-    else if ( state == 1 )
-    {
-      if ( flag )
-      {
+    else if ( state == 1 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
-        if ( strcmp ( string, "P6" ) != 0 && strcmp ( string, "p6" ) != 0 )
-        {
+        if ( strcmp ( string, "P6" ) != 0 && strcmp ( string, "p6" ) != 0 ) {
           printf ( "\n" );
           printf ( "PPMB_READ_HEADER: Fatal error.\n" );
           printf ( "  Bad magic number = %s.\n", string );
@@ -5147,66 +4616,51 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
         state = 2;
       }
     }
-    else if ( state == 2 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 2 ) {
+      if ( !flag ) {
         state = 3;
       }
     }
-    else if ( state == 3 )
-    {
-      if ( flag )
-      {
+    else if ( state == 3 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", xsize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
         state = 4;
       }
     }
-    else if ( state == 4 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 4 ) {
+      if ( !flag ) {
         state = 5;
       }
     }
-    else if ( state == 5 )
-    {
-      if ( flag )
-      {
+    else if ( state == 5 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", ysize );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
         state = 6;
       }
     }
-    else if ( state == 6 )
-    {
-      if ( !flag )
-      {
+    else if ( state == 6 ) {
+      if ( !flag ) {
         state = 7;
       }
     }
-    else if ( state == 7 )
-    {
-      if ( flag )
-      {
+    else if ( state == 7 ) {
+      if ( flag ) {
         string[nchar] = 0;
         nchar = nchar + 1;
         count = sscanf ( string, "%d", maxrgb );
-        if ( count == EOF )
-        {
+        if ( count == EOF ) {
           return 1;
         }
         nchar = 0;
@@ -5217,17 +4671,14 @@ int ppmb_read_header ( FILE *file_pointer, int *xsize, int *ysize, int *maxrgb )
 }
 /******************************************************************************/
 
-int ppmb_read_test ( char *file_name )
+int ppmb_read_test ( char *filein_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_READ_TEST tests the binary portable pixel map read routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -5239,14 +4690,13 @@ int ppmb_read_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file containing the binary
+    Input, char *FILEIN_NAME, the name of the file containing the binary
     portable pixel map data.
 
     Output, int PPMB_READ_TEST, equals
     1, if the test could not be carried out,
     0, if the test was carried out.
 */
-{
   int *barray;
   int *garray;
   int  maxrgb;
@@ -5261,24 +4711,20 @@ int ppmb_read_test ( char *file_name )
 /*
   Read the data.
 */
-  result = ppmb_read ( file_name, &xsize, &ysize, &maxrgb, &rarray,
+  result = ppmb_read ( filein_name, &xsize, &ysize, &maxrgb, &rarray,
     &garray, &barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_READ_TEST: Fatal error!\n" );
     printf ( "  PPMB_READ failed.\n" );
-    if ( rarray != NULL )
-    {
+    if ( rarray != NULL ) {
       free ( rarray );
     }
-    if ( garray != NULL )
-    {
+    if ( garray != NULL ) {
       free ( garray );
     }
-    if ( barray != NULL )
-    {
+    if ( barray != NULL ) {
       free ( barray );
     }
     return 1;
@@ -5288,21 +4734,17 @@ int ppmb_read_test ( char *file_name )
 */
   result = ppm_check_data ( xsize, ysize, maxrgb, rarray, garray, barray );
 
-  if ( rarray != NULL )
-  {
+  if ( rarray != NULL ) {
     free ( rarray );
   }
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "  PPM_CHECK_DATA reports bad data from the file.\n" );
     return 1;
@@ -5315,22 +4757,19 @@ int ppmb_read_test ( char *file_name )
 }
 /******************************************************************************/
 
-int ppmb_write ( char *file_name, int xsize, int ysize, int *rarray, 
-  int *garray, int *barray )
+int ppmb_write ( char *fileout_name, int xsize, int ysize, int maxrgb,
+  int *rarray, int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_WRITE writes the header and data for a binary portable pixel map file.
  
-   Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
   Modified:
  
-    16 December 2002
+    03 October 1998
  
   Author:
  
@@ -5338,10 +4777,12 @@ int ppmb_write ( char *file_name, int xsize, int ysize, int *rarray,
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
+
+    Input, int MAXRGB, the maximum RGB value.
 
     Input, int *RARRAY, *GARRAY, *BARRAY, the arrays of XSIZE by YSIZE 
     data values.
@@ -5350,54 +4791,25 @@ int ppmb_write ( char *file_name, int xsize, int ysize, int *rarray,
     1, if the file could not be written,
     0, if the file was written.
 */
-{
-  FILE *file_pointer;
-  int i;
-  int *indexb;
-  int *indexg;
-  int *indexr;
-  int j;
-  int maxrgb;
-  int result;
+  FILE *fileout;
+  int   result;
 /*
   Open the output file.
 */
-  file_pointer = fopen ( file_name, "wb" );
+  fileout = fopen ( fileout_name, "wb" );
 
-  if ( file_pointer == NULL )
-  {
+  if ( fileout == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE: Fatal error!\n" );
-    printf ( "  Cannot open the output file %s.\n", file_name );
+    printf ( "  Cannot open the output file %s.\n", fileout_name );
     return 1;
-  }
-/*
-  Compute the maximum.
-*/
-  maxrgb = 0;
-  indexr = rarray;
-  indexg = garray;
-  indexb = barray;
-
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      maxrgb = MAX ( maxrgb, *indexr );
-      maxrgb = MAX ( maxrgb, *indexg );
-      maxrgb = MAX ( maxrgb, *indexb );
-      indexr = indexr + 1;
-      indexg = indexg + 1;
-      indexb = indexb + 1;
-    }
   }
 /*
   Write the header.
 */
-  result = ppmb_write_header ( file_pointer, xsize, ysize, maxrgb );
+  result = ppmb_write_header ( fileout, xsize, ysize, maxrgb );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE: Fatal error!\n" );
     printf ( "  PPMB_WRITE_HEADER failed.\n" );
@@ -5406,11 +4818,9 @@ int ppmb_write ( char *file_name, int xsize, int ysize, int *rarray,
 /*
   Write the data.
 */
-  result = ppmb_write_data ( file_pointer, xsize, ysize, rarray, garray, 
-    barray );
+  result = ppmb_write_data ( fileout, xsize, ysize, rarray, garray, barray );
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE: Fatal error!\n" );
     printf ( "  PPMB_WRITE_DATA failed.\n" );
@@ -5419,24 +4829,21 @@ int ppmb_write ( char *file_name, int xsize, int ysize, int *rarray,
 /*
   Close the file.
 */
-  fclose ( file_pointer );
+  fclose ( fileout );
 
   return 0;
 }
 /******************************************************************************/
 
-int ppmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
-  int *garray, int *barray )
+int ppmb_write_data ( FILE *fileout, int xsize, int ysize, int *rarray,
+  int *garray, int *barray ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_WRITE_DATA writes the data for a binary portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -5448,7 +4855,7 @@ int ppmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -5460,7 +4867,6 @@ int ppmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
     1, if the data could not be written,
     0, if the data was written.
 */
-{
   int  i;
   int *indexb;
   int *indexg;
@@ -5471,13 +4877,11 @@ int ppmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
   indexg = garray;
   indexb = barray;
 
-  for ( j = 0; j < ysize; j++ )
-  {
-    for ( i = 0; i < xsize; i++ )
-    {
-      fputc ( *indexr, file_pointer );
-      fputc ( *indexg, file_pointer );
-      fputc ( *indexb, file_pointer );
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      fputc ( *indexr, fileout );
+      fputc ( *indexg, fileout );
+      fputc ( *indexb, fileout );
       indexr = indexr + 1;
       indexg = indexg + 1;
       indexb = indexb + 1;
@@ -5487,17 +4891,14 @@ int ppmb_write_data ( FILE *file_pointer, int xsize, int ysize, int *rarray,
 }
 /******************************************************************************/
 
-int ppmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxrgb )
+int ppmb_write_header ( FILE *fileout, int xsize, int ysize, int maxrgb ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_WRITE_HEADER writes the header of a binary portable pixel map file.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -5509,7 +4910,7 @@ int ppmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxrgb )
 
   Parameters:
 
-    Input, FILE *FILE_POINTER, a pointer to the file to contain the binary
+    Input, FILE *FILEOUT, a pointer to the file to contain the binary
     portable pixel map data.
 
     Input, int XSIZE, YSIZE, the number of rows and columns of data.
@@ -5520,24 +4921,20 @@ int ppmb_write_header ( FILE *file_pointer, int xsize, int ysize, int maxrgb )
     1, if the header could not be written,
     0, if the header was written.
 */
-{
-  fprintf ( file_pointer, "P6 %d %d %d ", xsize, ysize, maxrgb );
+  fprintf ( fileout, "P6 %d %d %d ", xsize, ysize, maxrgb );
 
   return 0;
 }
 /******************************************************************************/
 
-int ppmb_write_test ( char *file_name )
+int ppmb_write_test ( char *fileout_name ) {
 
 /******************************************************************************/
+
 /*
   Purpose:
 
     PPMB_WRITE_TEST tests the binary portable pixel map write routines.
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
 
   Modified:
 
@@ -5549,17 +4946,23 @@ int ppmb_write_test ( char *file_name )
 
   Parameters:
 
-    Input, char *FILE_NAME, the name of the file to contain the binary
+    Input, char *FILEOUT_NAME, the name of the file to contain the binary
     portable pixel map data.
 
     Output, int PPMB_WRITE_TEST equals
     1, if the test could not be carried out,
     0, if the test was carried out.
 */
-{
+
   int *barray;
   int *garray;
+  int  i;
+  int *indexb;
+  int *indexg;
+  int *indexr;
+  int  j;
   int  maxrgb;
+  int  numbytes;
   int *rarray;
   int  result;
   int  xsize;
@@ -5569,71 +4972,107 @@ int ppmb_write_test ( char *file_name )
   ysize = 200;
 /*
   Allocate memory.
-*/ 
-  rarray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+*/
+  rarray = NULL;
+  garray = NULL;
+  barray = NULL;
+  numbytes = xsize * ysize * sizeof ( int );  
 
-  if ( rarray == NULL )
-  {
+  rarray = ( int * ) malloc ( numbytes );
+
+  if ( rarray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  garray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  garray = ( int * ) malloc ( numbytes );
 
-  if ( garray == NULL )
-  {
+  if ( garray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 
-  barray = ( int * ) malloc ( xsize * ysize * sizeof ( int ) );
+  barray = ( int * ) malloc ( numbytes );
 
-  if ( barray == NULL )
-  {
+  if ( barray == NULL ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  Unable to allocate memory for data.\n" );
+    printf ( "  Seeking %d bytes.\n", numbytes );
     return 1;
   }
 /*
   Set the data.
 */
-  result = ppm_example ( xsize, ysize, rarray, garray, barray );
+  indexr = rarray;
+  indexg = garray;
+  indexb = barray;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      if ( j >= i ) {
+        *indexr = 255;
+        *indexg = 0;
+        *indexb = 0;
+      }
+      else if ( ( xsize - 1 ) * j + ( ysize - 1 ) * i <= 
+        ( xsize - 1 ) * ( ysize - 1 ) ) {
+        *indexr = 0;
+        *indexg = 255;
+        *indexb = 0;
+      }
+      else {
+        *indexr = 0;
+        *indexg = 0;
+        *indexb = 255;
+      }
+      indexr = indexr + 1;
+      indexg = indexg + 1;
+      indexb = indexb + 1;
+    }
+  }
+/*
+  Compute the maximum.
+*/
+  maxrgb = 0;
+  indexr = rarray;
+  indexg = garray;
+  indexb = barray;
 
-  if ( result != 0 )
-  {
-    printf ( "\n" );
-    printf ( "PPMB_WRITE_TEST: Fatal error!\n" );
-    printf ( "  PPM_EXAMPLE failed.\n" );
-    return 1;
+  for ( j = 0; j < ysize; j++ ) {
+    for ( i = 0; i < xsize; i++ ) {
+      maxrgb = MAX ( maxrgb, *indexr );
+      maxrgb = MAX ( maxrgb, *indexg );
+      maxrgb = MAX ( maxrgb, *indexb );
+      indexr = indexr + 1;
+      indexg = indexg + 1;
+      indexb = indexb + 1;
+    }
   }
 /*
   Write the data to the file.
 */
-  result = ppmb_write ( file_name, xsize, ysize, rarray, garray,
+  result = ppmb_write ( fileout_name, xsize, ysize, maxrgb, rarray, garray,
     barray );
 
-  if ( rarray != NULL )
-  {
+  if ( rarray != NULL ) {
     free ( rarray );
   }
 
-  if ( garray != NULL )
-  {
+  if ( garray != NULL ) {
     free ( garray );
   }
 
-  if ( barray != NULL )
-  {
+  if ( barray != NULL ) {
     free ( barray );
   }
 
-  if ( result != 0 )
-  {
+  if ( result != 0 ) {
     printf ( "\n" );
     printf ( "PPMB_WRITE_TEST: Fatal error!\n" );
     printf ( "  PPMB_WRITE failed.\n" );
@@ -5642,54 +5081,4 @@ int ppmb_write_test ( char *file_name )
 
   return 0;
 }
-/**********************************************************************/
 
-void timestamp ( void )
-
-/**********************************************************************/
-/*
-  Purpose:
-
-    TIMESTAMP prints the current YMDHMS date as a time stamp.
-
-  Example:
-
-    May 31 2001 09:45:54 AM
-
-  Licensing:
-
-    This code is distributed under the GNU LGPL license. 
-
-  Modified:
-
-    21 August 2002
-
-  Author:
-
-    John Burkardt
-
-  Parameters:
-
-    None
-*/
-{
-# define TIME_SIZE 29
-
-  static char time_buffer[TIME_SIZE];
-  const struct tm *tm;
-  size_t len;
-  time_t now;
-
-  now = time ( NULL );
-  tm = localtime ( &now );
-
-  len = strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm );
-
-  if ( len != 0 ) 
-  {
-    printf ( "%s\n", time_buffer );
-  }
-
-  return;
-# undef TIME_SIZE
-}
