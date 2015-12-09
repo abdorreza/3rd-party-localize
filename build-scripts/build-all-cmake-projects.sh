@@ -10,6 +10,10 @@ REPO_ROOT="$(pwd)"
 PLATFORM_NAME=$1
 echo "Build project for platform $2"
 
+
+echo "cmake toolchain path $REPO_ROOT/cmake"
+export CMAKE_LOCALIZE_TOOLS_DIR="$REPO_ROOT/cmake"
+
 # msgpack-c
 /bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" msgpack-c msgpack $PLATFORM_NAME
 # gmock
