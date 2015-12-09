@@ -16,7 +16,7 @@
 : ${BOOST_VERSION:=1.56.0}
 : ${BOOST_VERSION2:=1_56_0}
 
-: ${BOOST_LIBS:="program_options"}
+: ${BOOST_LIBS:="atomic chrono date_time exception filesystem program_options random signals system test thread serialization"}
 
 # Current iPhone SDK
 : ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
