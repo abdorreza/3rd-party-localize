@@ -8,7 +8,7 @@ fi
 
 REPO_ROOT="$(pwd)"
 PLATFORM_NAME=$1
-echo "Build project for platform $2"
+echo "Build project for platform $1"
 
 
 echo "cmake toolchain path $REPO_ROOT/cmake"
