@@ -27,7 +27,7 @@ if [ "$PLATFORM_NAME" == "macosx" ]; then
 	cp src/*/macosx-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/"
 	cp src/*/macosx-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/"
 	cp src/*/macosx-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/"
-	cp -r src/*/macosx-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "ios" ]; then
 	cd "$TEMP_DIR"
 	sh "$REPO_ROOT/build-scripts/boost-build-scripts/boost_apple.sh"
@@ -37,7 +37,7 @@ elif [ "$PLATFORM_NAME" == "ios" ]; then
 	cp src/*/iphone-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/iphone-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/iphone-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
-	cp -r src/*/iphone-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "android" ]; then
 	cd "$TEMP_DIR"
 	sh "$REPO_ROOT/build-scripts/boost-build-scripts/boost_android.sh"
@@ -47,7 +47,7 @@ elif [ "$PLATFORM_NAME" == "android" ]; then
 	cp src/*/android-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/android-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/android-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
-	cp -r src/*/android-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "linux-gcc" ]; then
 	cd "$TEMP_DIR"
 	sh "$REPO_ROOT/build-scripts/boost-build-scripts/boost_linux.sh" "gcc"
@@ -57,7 +57,7 @@ elif [ "$PLATFORM_NAME" == "linux-gcc" ]; then
 	cp src/*/linux-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
-	cp -r src/*/linux-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "linux-gcc4.9" ]; then
 	cd "$TEMP_DIR"
 	sh "$REPO_ROOT/build-scripts/boost-build-scripts/boost_linux.sh" "gcc-4.9"
@@ -67,15 +67,15 @@ elif [ "$PLATFORM_NAME" == "linux-gcc4.9" ]; then
 	cp src/*/linux-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
-	cp -r src/*/linux-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "linux-llvm" ]; then
 	cd "$TEMP_DIR"
-	sh "$REPO_ROOT/build-scripts/boost-build-scripts/boost_linux.sh" "clang"
+	sh "$REPO_ROOT/boost-build-scriptsts/boost-build-scripts/boost_linux.sh" "clang"
 	cp src/*/linux-build/stage/lib/libboost_system.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_serialization.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_wserialization.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_program_options.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_filesystem.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_thread.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
-	cp -r src/*/linux-build/boost "$REPO_ROOT/install/boost/include/"
+	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 fi
