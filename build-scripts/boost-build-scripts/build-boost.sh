@@ -7,7 +7,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 INSTALL_LOCATION="install/boost/"
-PLATFORM_NAME=$1
+PLATFORM_NAME="$1"
 
 REPO_ROOT="$(pwd)"
 SRC_DIR=$1
@@ -70,7 +70,7 @@ elif [ "$PLATFORM_NAME" == "linux-gcc4.9" ]; then
 	cp -r src/*/boost "$REPO_ROOT/install/boost/include/"
 elif [ "$PLATFORM_NAME" == "linux-llvm" ]; then
 	cd "$TEMP_DIR"
-	sh "$REPO_ROOT/boost-build-scriptsts/boost-build-scripts/boost_linux.sh" "clang"
+	sh "$REPO_ROOT/build-scripts/boost-build-scriptsts/boost_linux.sh" "clang"
 	cp src/*/linux-build/stage/lib/libboost_system.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_serialization.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
 	cp src/*/linux-build/stage/lib/libboost_wserialization.a "$REPO_ROOT/install/boost/lib/$PLATFORM_NAME/" 
