@@ -10,8 +10,8 @@
 
 # Include config and common functions
 SCRIPTPATH="$(dirname $0)/boost_config.sh"
-echo "$(pwd)/$SCRIPTPATH"
-. "$(pwd)/$SCRIPTPATH"
+echo "$SCRIPTPATH"
+. "$SCRIPTPATH"
 
 
 : ${PREFIXDIR:=`pwd`/linux/prefix}
