@@ -39,7 +39,7 @@ if [ "$?" != "0" ]; then
 fi
 
 # ViSensor
-if [ "$PLATFORM_NAME" == "macosx" ]; then
+if [ "$PLATFORM_NAME" = "macosx" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" libvisensor visensor $PLATFORM_NAME
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh libvisensor failed"
@@ -50,7 +50,7 @@ else
 fi
 
 # NavChipSDK
-if [ "$PLATFORM_NAME" == "macosx" ]; then
+if [ "$PLATFORM_NAME" = "macosx" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" NavChipSDK NavChipSDK $PLATFORM_NAME
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh NavChipSDK failed"
@@ -61,7 +61,7 @@ else
 fi
 
 # libgeos
-if [ "$PLATFORM_NAME" == "macosx" ] || [ "$PLATFORM_NAME" == "linux-gcc" ] || [ "$PLATFORM_NAME" == "linux-gcc4.9" ] || [ "$PLATFORM_NAME" == "linux-llvm" ]; then
+if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc4.9" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" libgeos-svn-3.4 geos $PLATFORM_NAME
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh libgeos-svn-3 failed"
@@ -72,7 +72,7 @@ else
 fi
 
 # libceres-solver
-if [ "$PLATFORM_NAME" == "macosx" ] || [ "$PLATFORM_NAME" == "linux-gcc" ] || [ "$PLATFORM_NAME" == "linux-gcc4.9" ] || [ "$PLATFORM_NAME" == "linux-llvm" ]; then
+if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc4.9" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" ceres-solver-1.11.0 ceres $PLATFORM_NAME "-DMINIGLOG=ON -DGFLAGS=OFF -DSUITESPARSE=OFF -DCXSPARSE=OFF -DEIGENSPARSE=ON -DDISABLE_WFORMAT=ON -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5"
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh ceres failed"
