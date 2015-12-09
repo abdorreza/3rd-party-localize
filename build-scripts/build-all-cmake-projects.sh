@@ -23,19 +23,19 @@ fi
 # gmock
 /bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" gmock-1.7.0 gmock $PLATFORM_NAME
 if [[ "$?" != "0" ]]; then
-  echo "build-cmake-projects.sh msgpack-c gmock"
+  echo "build-cmake-projects.sh gmock failed"
   exit 1
 fi
 # PBMLIB
 /bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" PBMLIB pbmlib $PLATFORM_NAME
 if [[ "$?" != "0" ]]; then
-  echo "build-cmake-projects.sh msgpack-c PBMLIB"
+  echo "build-cmake-projects.sh PBMLIB failed"
   exit 1
 fi
 # Intell tbb
 /bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" intel_tbb_42_20140601oss tbb $PLATFORM_NAME
 if [[ "$?" != "0" ]]; then
-  echo "build-cmake-projects.sh msgpack-c tbb"
+  echo "build-cmake-projects.sh tbb failed"
   exit 1
 fi
 
@@ -43,7 +43,7 @@ fi
 if [ "$PLATFORM_NAME" == "macosx" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" libvisensor visensor $PLATFORM_NAME
 	if [[ "$?" != "0" ]]; then
-  		echo "build-cmake-projects.sh msgpack-c libvisensor"
+  		echo "build-cmake-projects.sh libvisensor failed"
 		exit 1
 	fi
 else
@@ -54,7 +54,7 @@ fi
 if [ "$PLATFORM_NAME" == "macosx" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" NavChipSDK NavChipSDK $PLATFORM_NAME
 	if [[ "$?" != "0" ]]; then
-  		echo "build-cmake-projects.sh msgpack-c NavChipSDK"
+  		echo "build-cmake-projects.sh NavChipSDK failed"
 		exit 1
 	fi
 else
@@ -65,7 +65,7 @@ fi
 if [ "$PLATFORM_NAME" == "macosx" ] || [ "$PLATFORM_NAME" == "linux" ] || [ "$PLATFORM_NAME" == "linux-gcc4.9" ] || [ "$PLATFORM_NAME" == "linux-llvm" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" libgeos-svn-3.4 geos $PLATFORM_NAME
 	if [[ "$?" != "0" ]]; then
-  		echo "build-cmake-projects.sh msgpack-c libgeos-svn-3"
+  		echo "build-cmake-projects.sh libgeos-svn-3 failed"
 		exit 1
 	fi
 else
@@ -76,7 +76,7 @@ fi
 if [ "$PLATFORM_NAME" == "macosx" ] || [ "$PLATFORM_NAME" == "linux" ] || [ "$PLATFORM_NAME" == "linux-gcc4.9" ] || [ "$PLATFORM_NAME" == "linux-llvm" ]; then
 	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" ceres-solver-1.11.0 ceres $PLATFORM_NAME "-DMINIGLOG=ON -DGFLAGS=OFF -DSUITESPARSE=OFF -DCXSPARSE=OFF -DEIGENSPARSE=ON -DDISABLE_WFORMAT=ON -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5"
 	if [[ "$?" != "0" ]]; then
-  		echo "build-cmake-projects.sh msgpack-c ceres"
+  		echo "build-cmake-projects.sh ceres failed"
 		exit 1
 	fi
 else
