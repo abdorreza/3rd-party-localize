@@ -28,13 +28,13 @@ mkdir -p "$PROJECT_BUILD_LOCATION"
 cd "$PROJECT_BUILD_LOCATION"
 echo $(pwd)
 cmake -DCMAKE_BUILD_TYPE=Release "-DCMAKE_TOOLCHAIN_FILE=$CMAKE_LOCALIZE_TOOLS_DIR/toolchain/$PLATFORM_NAME.toolchain.cmake" $CMAKE_FLAGS "-DDISABLE_WERROR=1" "$PROJECT_LOCATION"
-if [[ "$?" != "0" ]]; then
+if [ "$?" != "0" ]; then
   echo "cmake failed!!!"
   exit 1
 fi
 
 make -j8 VERBOSE=1
-if [[ "$?" != "0" ]]; then
+if [ "$?" != "0" ]; then
   echo "make failed!!!"
   exit 1
 fi
