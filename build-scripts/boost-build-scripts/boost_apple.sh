@@ -16,7 +16,7 @@
 : ${BOOST_VERSION:=1.56.0}
 : ${BOOST_VERSION2:=1_56_0}
 
-: ${BOOST_LIBS:="atomic chrono date_time exception filesystem program_options random signals system test thread serialization"}
+: ${BOOST_LIBS:="program_options"}
 
 # Current iPhone SDK
 : ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
@@ -134,7 +134,7 @@ updateBoost()
 
     cat >> $BOOST_SRC/tools/build/src/user-config.jam <<EOF
 using darwin : ${IPHONE_SDKVERSION}~iphone
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch armv7 -arch armv7s -arch arm64 -fvisibility=hidden -fvisibility-inlines-hidden $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch armv7 -arch armv7s -arch arm64 $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneOS.platform/Developer
 : <architecture>arm <target-os>iphone
 ;
@@ -186,8 +186,8 @@ buildBoostForIPhoneOS()
 
     echo Building Boost for iPhone
     # Install this one so we can copy the includes for the frameworks...
-    ./b2 -j16 --build-dir=iphone-build --stagedir=iphone-build/stage --prefix=$PREFIXDIR toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static stage
-    ./b2 -j16 --build-dir=iphone-build --stagedir=iphone-build/stage --prefix=$PREFIXDIR toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static install
+    ./b2 -j16 --build-dir=iphone-build --stagedir=iphone-build/stage --prefix=$PREFIXDIR toolset=darwin cxxflags="-arch armv7 -arch armv7s -arch arm64 -std=c++11 -stdlib=libc++" linkflags="-stdlib=libc++" architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static stage
+    ./b2 -j16 --build-dir=iphone-build --stagedir=iphone-build/stage --prefix=$PREFIXDIR toolset=darwin cxxflags="-arch armv7 -arch armv7s -arch arm64 -std=c++11 -stdlib=libc++" linkflags="-stdlib=libc++" architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static install
     doneSection
 
     echo Building Boost for iPhoneSimulator
