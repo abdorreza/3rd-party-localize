@@ -71,9 +71,21 @@ else
 	echo "libgeos won't build for $PLATFORM_NAME"
 fi
 
+# licxsparse
+if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc-4.9.2" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" CXSparse cxsparse $PLATFORM_NAME 
+	if [ "$?" != "0" ]; then
+  		echo "build-cmake-projects.sh cxsparce failed"
+		exit 1
+	fi
+else
+	echo "libceres-solver won't build for $PLATFORM_NAME"
+fi
+
+
 # libceres-solver
 if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc-4.9.2" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
-	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" ceres-solver-1.11.0 ceres $PLATFORM_NAME "-DMINIGLOG=ON -DGFLAGS=OFF -DSUITESPARSE=OFF -DCXSPARSE=OFF -DLAPACK=OFF -DEIGENSPARSE=ON -DDISABLE_WFORMAT=ON -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5"
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" ceres-solver-1.11.0 ceres $PLATFORM_NAME "-DMINIGLOG=ON -DGFLAGS=OFF -DSUITESPARSE=OFF -DCXSPARSE=ON -DLAPACK=OFF -DEIGENSPARSE=ON -DDISABLE_WFORMAT=ON -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5;$REPO_ROOT/install/cxsparse/include/cxsparse"
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh ceres failed"
 		exit 1
