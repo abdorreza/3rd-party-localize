@@ -17,5 +17,5 @@ mkdir -p "$LIB_INSTALL_LOCATION"
 
 # Install gmock
 cp $LIB_LOCATION/libs/*/libcxsparse.a "$LIB_INSTALL_LOCATION"
-echo "cp -R $PROJECT_LOCATION/Include/* $HEADER_INSTALL_LOCATION/cxsparse/"
-cp -R "$PROJECT_LOCATION/Include/" "$HEADER_INSTALL_LOCATION/cxsparse/"
+cp "$PROJECT_LOCATION/Include/cs.h" "$HEADER_INSTALL_LOCATION/cxsparse/"
+cp "$PROJECT_LOCATION/Include/SuiteSparse_config.h" "$HEADER_INSTALL_LOCATION/cxsparse/"
