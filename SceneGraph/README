@@ -1,0 +1,14 @@
+
+SceneGraph is a rudimentary scene graph, the nodes of which are C++ classes
+inherited from "GLObject".  These objects must have a "DrawCanonicalObject()"
+funciton.
+
+Presently, SceneGraph is used with Pangolin.
+
+Dependencies:
+CVars (https://github.com/arpg/CVars)
+OpenGL
+ASSIMP
+Eigen3
+Pangolin (https://github.com/arpg/Pangolin)
+

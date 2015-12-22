@@ -93,3 +93,27 @@ if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$
 else
 	echo "libceres-solver won't build for $PLATFORM_NAME"
 fi
+
+# Pangolin
+if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc-4.9.2" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" Pangolin pangolin $PLATFORM_NAME "-DCPP11_NO_BOOST=ON -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_PANGOLIN_VIDEO=OFF"
+	if [ "$?" != "0" ]; then
+  		echo "build-cmake-projects.sh Pangolin failed"
+		exit 1
+	fi
+else
+	echo "Pangolin won't build for $PLATFORM_NAME"
+fi
+
+# SceneGraph
+if [ "$PLATFORM_NAME" = "macosx" ] || [ "$PLATFORM_NAME" = "linux-gcc" ] || [ "$PLATFORM_NAME" = "linux-gcc-4.9.2" ] || [ "$PLATFORM_NAME" = "linux-llvm" ]; then
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" SceneGraph SceneGraph $PLATFORM_NAME "-DEXPORT_SceneGraph=OFF -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5;$REPO_ROOT/install/pangolin;$REPO_ROOT/install/pangolin/platform-include/macosx;$REPO_ROOT/install/pangolin/lib/macosx"
+
+	if [ "$?" != "0" ]; then
+  		echo "build-cmake-projects.sh SceneGraph failed"
+		exit 1
+	fi
+else
+	echo "SceneGraph won't build for $PLATFORM_NAME"
+fi
+
