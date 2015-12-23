@@ -93,9 +93,20 @@ else
 	echo "libceres-solver won't build for $PLATFORM_NAME"
 fi
 
+# glew
+if [ "$PLATFORM_NAME" = "macosx" ]; then
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" glew-cmake glew $PLATFORM_NAME "-DDISABLE_WERROR=ON"
+	if [ "$?" != "0" ]; then
+  		echo "build-cmake-projects.sh glew failed"
+		exit 1
+	fi
+else
+	echo "glew won't build for $PLATFORM_NAME"
+fi
+
 # Pangolin
 if [ "$PLATFORM_NAME" = "macosx" ]; then
-	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" Pangolin pangolin $PLATFORM_NAME "-DCPP11_NO_BOOST=ON -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_PANGOLIN_VIDEO=OFF"
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" Pangolin pangolin $PLATFORM_NAME "-DCPP11_NO_BOOST=ON -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_PANGOLIN_VIDEO=OFF -DCMAKE_PREFIX_PATH=$REPO_ROOT/install/glew/include;$REPO_ROOT/install/glew/lib/$PLATFORM_NAME;$REPO_ROOT/eigen-3.2.5"
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh Pangolin failed"
 		exit 1
@@ -106,7 +117,7 @@ fi
 
 # SceneGraph
 if [ "$PLATFORM_NAME" = "macosx" ]; then
-	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" SceneGraph SceneGraph $PLATFORM_NAME "-DEXPORT_SceneGraph=OFF -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_PREFIX_PATH=$REPO_ROOT/eigen-3.2.5;$REPO_ROOT/install/pangolin;$REPO_ROOT/install/pangolin/platform-include/macosx;$REPO_ROOT/install/pangolin/lib/macosx"
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" SceneGraph SceneGraph $PLATFORM_NAME "-DEXPORT_SceneGraph=OFF -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DUSE_GLUT=ON -DCMAKE_PREFIX_PATH=$REPO_ROOT/install/glew/include;$REPO_ROOT/install/glew/lib/$PLATFORM_NAME;$REPO_ROOT/eigen-3.2.5;$REPO_ROOT/install/pangolin;$REPO_ROOT/install/pangolin/platform-include/$PLATFORM_NAME;$REPO_ROOT/install/pangolin/lib/$PLATFORM_NAME"
 
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh SceneGraph failed"

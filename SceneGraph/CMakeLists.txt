@@ -54,15 +54,15 @@ if(NOT _ANDROID_)
     find_package( OpenGL REQUIRED )
     find_package( GLEW REQUIRED )
     list(APPEND REQUIRED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARY}" )
+    list(APPEND REQUIRED_INCLUDE_DIRS "${OPENGL_INCLUDE_DIR};${GLEW_INCLUDE_DIR}" )
 
     # While Pangolin doesn't require GLUT anymore, SceneGraph still does.
     # These are the checks to properly include GLUT at the linker stage.
     option(USE_GLUT "Use glut" OFF)
     if(USE_GLUT)
-      find_package( FREEGLUT QUIET)
-      find_package( GLUT QUIET)
+      #find_package(FREEGLUT)
+      find_package(GLUT)
     endif()
-
     if(_OSX_)
       INCLUDE(CheckCXXSourceRuns)
       set(CMAKE_REQUIRED_LIBRARIES ${GLUT_LIBRARY})
@@ -245,11 +245,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/SceneGraph/config.h.in ${CMAK
 
 ################################################################################
 # Include collected includes / libraries
-
-# I moved GLEW_INCLUDE_DIR and OPENGL_INCLUDE_DIR to make sure 
-# that system path is at the end of include list
-list(APPEND REQUIRED_INCLUDE_DIRS "${OPENGL_INCLUDE_DIR};${GLEW_INCLUDE_DIR}" )
-
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/include )
 include_directories( ${CMAKE_SOURCE_DIR}/include )
 include_directories( ${CMAKE_BINARY_DIR} )
