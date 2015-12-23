@@ -95,7 +95,7 @@ fi
 
 # glew
 if [ "$PLATFORM_NAME" = "macosx" ]; then
-	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" glew-cmake glew $PLATFORM_NAME "-DDISABLE_WERROR=ON"
+	/bin/sh "$REPO_ROOT/build-scripts/build-cmake-projects.sh" glew-1.13.0 glew $PLATFORM_NAME "-DDISABLE_WERROR=ON"
 	if [ "$?" != "0" ]; then
   		echo "build-cmake-projects.sh glew failed"
 		exit 1
