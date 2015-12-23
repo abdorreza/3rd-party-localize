@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [ "$#" -ne 1 ]; then
-        echo "Usage $0: build-script-dir [ios, android, macosx, linux-gcc, linux-gcc-4.9.2, linux-llvm]"
-        echo "Example $0 ~/3rd-party-localize/build-scripts/ android"
+        echo "Usage $0: [ios, android, macosx, linux-gcc, linux-gcc-4.9.2, linux-llvm]"
+        echo "Example $0 android"
         exit
 fi
 
